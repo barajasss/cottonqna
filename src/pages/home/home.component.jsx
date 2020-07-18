@@ -2,6 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 import SearchInput from '../../components/search-input/search-input.component'
+import QuestionContainer from '../../components/question-container/question-container.component'
 
 import { connect } from 'react-redux'
 
@@ -23,6 +24,7 @@ class HomePage extends React.Component {
 					''
 				)}
 				<SearchInput />
+				<QuestionContainer />
 			</div>
 		)
 	}

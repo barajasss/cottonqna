@@ -1,0 +1,20 @@
+.user-icon {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	margin-right: 5px;
+}
+
+.question {
+	button,
+	a,
+	a:focus,
+	a:hover,
+	button:focus,
+	button:hover {
+		outline: none;
+		border: none;
+		box-shadow: none;
+		text-decoration: none;
+	}
+}

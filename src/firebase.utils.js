@@ -64,4 +64,30 @@ const postQuestion = async ({
 	})
 }
 
-export { firebase, googleSignIn, googleSignOut, fetchUserById, postQuestion }
+const fetchQuestions = async (start = 0) => {
+	const questions = []
+	try {
+		const questionsRef = await firebase
+			.firestore()
+			.collection('questions')
+			.orderBy('createdAt')
+			.startAfter(start)
+			.limit(20)
+			.get()
+		questionsRef.forEach(questionDoc => {
+			questions.push({ id: questionDoc.id, ...questionDoc.data() })
+		})
+		return questions
+	} catch (err) {
+		return []
+	}
+}
+
+export {
+	firebase,
+	googleSignIn,
+	googleSignOut,
+	fetchUserById,
+	postQuestion,
+	fetchQuestions,
+}
