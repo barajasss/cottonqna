@@ -13,12 +13,13 @@ body {
 }
 
 ::-webkit-scrollbar {
-	background-color: rgb(136, 191, 247);
-	width: 15px;
+	background-color: #ccc;
+	width: 13px;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: rgb(79, 134, 236);
+	background-color: #777;
+	border-radius: 10px;
 }
 
 code {

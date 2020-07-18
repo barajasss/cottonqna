@@ -4,6 +4,11 @@
 	font-size: 1.05rem;
 }
 
+svg {
+	margin-right: 10px;
+	transform: scale(1.2);
+}
+
 @media screen and (min-width: 720px) {
 	.App {
 		margin: 0 auto;

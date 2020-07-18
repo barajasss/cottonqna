@@ -2,6 +2,7 @@ import React from 'react'
 
 import './header.styles.scss'
 
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import Loader from '../loader/loader.component'
@@ -9,9 +10,10 @@ import Login from '../login/login.component'
 
 class Header extends React.Component {
 	render() {
+		const { isLoggedIn } = this.props
 		return (
 			<header>
-				<Login />
+				{!isLoggedIn ? <Login /> : ''}
 				<Loader />
 				<nav>
 					<ul className='row no-gutters'>
@@ -26,7 +28,7 @@ class Header extends React.Component {
 							</Link>
 						</li>
 						<li className='col-2'>
-							<Link to='/options'>
+							<Link to='/menu'>
 								<i className='fas fa-bars'></i>
 							</Link>
 						</li>
@@ -36,4 +38,9 @@ class Header extends React.Component {
 		)
 	}
 }
-export default Header
+
+const mapStateToProps = ({ user }) => ({
+	isLoggedIn: user.isLoggedIn,
+})
+
+export default connect(mapStateToProps)(Header)

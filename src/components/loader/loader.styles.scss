@@ -3,8 +3,8 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: rgb(18, 101, 185);
 	width: 100%;
+	background-color: white;
 	z-index: 200;
 
 	.progress-bar {
@@ -12,8 +12,8 @@
 		width: 50%;
 		position: absolute;
 		// background-color: rgb(54, 150, 247);
-		background-color: white;
-		animation: progress 1.5s infinite linear;
+		background-color: rgb(18, 101, 185);
+		animation: progress 1.7s infinite linear;
 		left: 0;
 		top: 0;
 	}
@@ -25,10 +25,10 @@
 		width: 40%;
 	}
 	50% {
-		width: 60%;
+		width: 50%;
 	}
 	100% {
 		left: 100%;
-		width: 90%;
+		width: 60%;
 	}
 }

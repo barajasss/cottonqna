@@ -5,15 +5,15 @@ class SearchInput extends React.Component {
 	render() {
 		return (
 			<div>
-				<form class='form-input'>
-					<div class='input-group search-input-container'>
+				<form className='form-input'>
+					<div className='input-group search-input-container'>
 						<input
-							class='form-control'
+							className='form-control'
 							type='search'
 							placeholder='search your question'></input>
-						<div class='input-group-append'>
-							<button class='btn btn-primary'>
-								<i class='fas fa-search'></i>
+						<div className='input-group-append'>
+							<button className='btn btn-primary'>
+								<i className='fas fa-search'></i>
 							</button>
 						</div>
 					</div>
