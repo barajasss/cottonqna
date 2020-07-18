@@ -70,17 +70,20 @@ class ProfilePage extends React.Component {
 							alt={`${displayName}`}
 						/>
 						<h3>{displayName}</h3>
-						<h5>Email: {email}</h5>
+						<h6>Email: {email}</h6>
 					</div>
 				) : (
 					''
 				)}
 
 				{isLoggedIn ? (
-					<p className='card p-3 mt-3 bg-warning'>
-						Account Details can only be changed in your google
-						account.
-					</p>
+					<div className='card p-2 mt-5 bg-success text-white'>
+						<p className='m-0'>
+							<i className='fas fa-info-circle' />
+							Account Details can only be changed in your google
+							account.
+						</p>
+					</div>
 				) : (
 					''
 				)}
