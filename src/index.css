@@ -11,6 +11,9 @@ body {
 * {
 	box-sizing: border-box;
 }
+*:focus {
+	outline: none;
+}
 
 ::-webkit-scrollbar {
 	background-color: #ccc;

@@ -44,4 +44,24 @@ const fetchUserById = async uid => {
 	return null
 }
 
-export { firebase, googleSignIn, googleSignOut, fetchUserById }
+const postQuestion = async ({
+	uid,
+	displayName,
+	photoURL,
+	question,
+	category,
+	discipline,
+}) => {
+	await firebase.firestore().collection('questions').add({
+		uid,
+		displayName,
+		photoURL,
+		question,
+		category,
+		discipline,
+		upvotes: 0,
+		createdAt: Date.now(),
+	})
+}
+
+export { firebase, googleSignIn, googleSignOut, fetchUserById, postQuestion }
