@@ -17,6 +17,7 @@ class App extends React.Component {
 	componentDidMount() {
 		firebase.auth().onAuthStateChanged(user => {
 			this.props.updateUser(user)
+			console.log(user)
 		})
 	}
 	render() {
@@ -26,7 +27,8 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path='/' component={HomePage} />
 					<Route path='/menu' component={MenuPage} />
-					<Route path='/profile' component={ProfilePage} />
+					<Route exact path='/profile' component={ProfilePage} />
+					<Route path='/profile/:uid' component={ProfilePage} />
 					<Route component={Page404} />
 				</Switch>
 			</div>

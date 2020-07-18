@@ -32,4 +32,16 @@ const googleSignOut = () => {
 	firebase.auth().signOut()
 }
 
-export { firebase, googleSignIn, googleSignOut }
+const fetchUserById = async uid => {
+	const userDoc = await firebase
+		.firestore()
+		.collection('users')
+		.doc(uid)
+		.get()
+	if (userDoc.exists) {
+		return userDoc.data()
+	}
+	return null
+}
+
+export { firebase, googleSignIn, googleSignOut, fetchUserById }

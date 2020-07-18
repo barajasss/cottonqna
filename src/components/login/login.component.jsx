@@ -9,8 +9,9 @@ class Login extends React.Component {
 			<div className='login card bg-info'>
 				<p>
 					<i className='fas fa-info-circle'></i> To view profile,
-					options and answer questions, click continue with google. If
-					you are a cottonian, please help others and volunteer.
+					options and ask or answer questions, click continue with
+					google. If you are a cottonian, please volunteer and help
+					others.
 				</p>
 				<button
 					className='btn btn-block btn-light'
