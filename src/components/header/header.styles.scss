@@ -31,6 +31,9 @@ header {
 					color: white;
 					outline: none;
 				}
+				a.active {
+					background-color: rgb(5, 5, 70);
+				}
 			}
 			li:first-child {
 				a {

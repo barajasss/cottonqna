@@ -26,10 +26,10 @@ class App extends React.Component {
 				<Header />
 				<Switch>
 					<Route exact path='/' component={HomePage} />
-					<Route path='/menu' component={MenuPage} />
+					<Route exact path='/menu' component={MenuPage} />
 					<Route exact path='/profile' component={ProfilePage} />
-					<Route path='/profile/:uid' component={ProfilePage} />
-					<Route component={Page404} />
+					<Route exact path='/profile/:uid' component={ProfilePage} />
+					<Route exact component={Page404} />
 				</Switch>
 			</div>
 		)
