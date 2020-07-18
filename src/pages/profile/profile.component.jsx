@@ -38,7 +38,6 @@ class ProfilePage extends React.Component {
 			}
 		} else {
 			firebase.auth().onAuthStateChanged(user => {
-				console.log('state changed', user)
 				if (!user) return
 				const { displayName, email, photoURL } = user
 				this.setState({

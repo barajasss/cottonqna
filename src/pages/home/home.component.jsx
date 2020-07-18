@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-
+import { Link } from 'react-router-dom'
 import SearchInput from '../../components/search-input/search-input.component'
 
 import { connect } from 'react-redux'
@@ -14,9 +14,11 @@ class HomePage extends React.Component {
 					<title>Home - Cotton Q & A</title>
 				</Helmet>
 				{isLoggedIn ? (
-					<button className='btn btn-block btn-primary'>
+					<Link
+						to='/post-question'
+						className='btn btn-block btn-primary'>
 						Post a Question
-					</button>
+					</Link>
 				) : (
 					''
 				)}

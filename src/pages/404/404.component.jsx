@@ -11,8 +11,8 @@ class Page404 extends React.Component {
 					<title>404 Not Found</title>
 				</Helmet>
 				<h5 className='text-center text-white'>
-					<i class='fas fa-exclamation-triangle'></i> 404 Page Does
-					Not Exist
+					<i className='fas fa-exclamation-triangle'></i> 404 Page
+					Does Not Exist
 				</h5>
 			</div>
 		)

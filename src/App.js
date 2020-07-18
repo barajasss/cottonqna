@@ -5,6 +5,7 @@ import { Route, Switch } from 'react-router-dom'
 import HomePage from './pages/home/home.component'
 import ProfilePage from './pages/profile/profile.component'
 import MenuPage from './pages/menu/menu.component'
+import PostQuestionPage from './pages/post-question/post-question.component'
 import Page404 from './pages/404/404.component'
 
 import Header from './components/header/header.component'
@@ -29,6 +30,12 @@ class App extends React.Component {
 					<Route exact path='/menu' component={MenuPage} />
 					<Route exact path='/profile' component={ProfilePage} />
 					<Route exact path='/profile/:uid' component={ProfilePage} />
+					<Route
+						exact
+						path='/post-question'
+						component={PostQuestionPage}
+					/>
+
 					<Route exact component={Page404} />
 				</Switch>
 			</div>
