@@ -6,6 +6,19 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	color: #333;
+	overflow-x: hidden !important;
+}
+* {
+	box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+	background-color: rgb(136, 191, 247);
+	width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgb(79, 134, 236);
 }
 
 code {

@@ -1,2 +1,14 @@
 .App {
+	padding: 50px 10px;
+	font-size: 1.05rem;
+}
+
+@media screen and (min-width: 720px) {
+	.App {
+		margin: 0 auto;
+		width: 700px;
+		padding: 50px 10px;
+		padding-top: 70px;
+		font-size: 1.2rem;
+	}
 }
