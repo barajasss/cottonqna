@@ -18,6 +18,7 @@ class HomePage extends React.Component {
 					<Link
 						to='/post-question'
 						className='btn btn-block btn-primary'>
+						<i className='fas fa-plus-circle' />
 						Post a Question
 					</Link>
 				) : (

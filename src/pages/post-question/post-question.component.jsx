@@ -50,17 +50,17 @@ class PostQuestionPage extends React.Component {
 				{!isLoggedIn ? <Redirect to='/' /> : ''}
 				<ul className='question-page-info list-group my-3'>
 					<li className='list-group-item list-group-item-primary'>
-						<i className='fas fa-square'></i> Ask question any
-						question or doubts related to academics in Cotton
-						University.
+						<i className='fas fa-square'></i> Ask any question or
+						doubts related to academics in Cotton University.
 					</li>
 					<li className='list-group-item list-group-item-primary'>
 						<i className='fas fa-square'></i> Ask anything about
-						social and cultural life in Cotton University.
+						social or cultural life in Cotton University.
 					</li>
 					<li className='list-group-item list-group-item-primary'>
 						<i className='fas fa-square'></i> Post a question that
-						you are looking for help in academics/other.
+						you are looking for help in admissions, and other
+						details.
 					</li>
 				</ul>
 				<form

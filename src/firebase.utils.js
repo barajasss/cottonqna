@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { findAllByTestId } from '@testing-library/react'
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyBUm7VDXmBH8HjHaOMSdvwtn_OkuQEY3GA',
@@ -59,7 +60,6 @@ const postQuestion = async ({
 		question,
 		category,
 		discipline,
-		upvotes: 0,
 		createdAt: Date.now(),
 	})
 }
@@ -74,12 +74,100 @@ const fetchQuestions = async (start = 0) => {
 			.startAfter(start)
 			.limit(20)
 			.get()
-		questionsRef.forEach(questionDoc => {
-			questions.push({ id: questionDoc.id, ...questionDoc.data() })
-		})
+		await Promise.all(
+			questionsRef.docs.map(async questionDoc => {
+				let upvotes = await firebase
+					.firestore()
+					.collection(`/questions/${questionDoc.id}/upvotes`)
+					.get()
+				if (upvotes.empty) {
+					upvotes = []
+				} else {
+					upvotes = upvotes.docs
+				}
+				const question = {
+					id: questionDoc.id,
+					...questionDoc.data(),
+					upvotes,
+				}
+				questions.push(question)
+			})
+		)
 		return questions
 	} catch (err) {
+		console.log(err)
 		return []
+	}
+}
+
+const upvoteQuestion = async (uid, questionId) => {
+	if (!uid) {
+		return
+	}
+	try {
+		await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.doc(uid)
+			.set(
+				{
+					uid,
+				},
+				{ merge: true }
+			)
+		const questionDoc = await firebase
+			.firestore()
+			.doc(`/questions/${questionId}`)
+			.get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.get()
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		return {
+			id: questionDoc.id,
+			...questionDoc.data(),
+			upvotes,
+		}
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}
+
+const deUpvoteQuestion = async (uid, questionId) => {
+	try {
+		await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.doc(uid)
+			.delete()
+		const questionDoc = await firebase
+			.firestore()
+			.doc(`/questions/${questionId}`)
+			.get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.get()
+
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		return {
+			id: questionDoc.id,
+			...questionDoc.data(),
+			upvotes,
+		}
+	} catch (err) {
+		console.log(err)
+		return null
 	}
 }
 
@@ -90,4 +178,6 @@ export {
 	fetchUserById,
 	postQuestion,
 	fetchQuestions,
+	upvoteQuestion,
+	deUpvoteQuestion,
 }
