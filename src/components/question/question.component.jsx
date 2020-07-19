@@ -109,20 +109,38 @@ class Question extends React.Component {
 				{isLoggedIn ? (
 					upvoted ? (
 						<button
-							className='btn btn-link pl-0'
+							className='btn btn-link pl-0 upvote-btn long'
 							onClick={() => this.deUpvoteQuestion(user.uid, id)}>
 							<small className='upvoted'>
 								<i className='fas fa-arrow-up' />
+								Upvoted
+							</small>
+						</button>
+					) : (
+						<button
+							className='btn btn-link pl-0 upvote-btn long'
+							onClick={() => this.upvoteQuestion(user.uid, id)}>
+							<small className='not-upvoted'>
+								<i className='fas fa-arrow-up' />
+								Upvote
+							</small>
+						</button>
+					)
+				) : (
+					''
+				)}
+
+				{isLoggedIn ? (
+					upvoted ? (
+						<button className='btn btn-link pl-0' disabled>
+							<small>
 								{upvotes.length}{' '}
 								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
 							</small>
 						</button>
 					) : (
-						<button
-							className='btn btn-link pl-0'
-							onClick={() => this.upvoteQuestion(user.uid, id)}>
-							<small className='not-upvoted'>
-								<i className='fas fa-arrow-up' />
+						<button className='btn btn-link pl-0' disabled>
+							<small>
 								{upvotes.length}{' '}
 								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
 							</small>

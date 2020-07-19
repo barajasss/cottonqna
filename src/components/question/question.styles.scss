@@ -4,7 +4,6 @@
 	border-radius: 50%;
 	margin-right: 5px;
 }
-
 .question {
 	button,
 	button:focus,
@@ -16,6 +15,8 @@
 		box-shadow: none;
 		text-decoration: none;
 		color: dodgerblue;
+		text-align: left;
+		padding-left: 0;
 	}
 }
 small.not-upvoted,
