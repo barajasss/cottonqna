@@ -19,7 +19,6 @@ class QuestionPage extends React.Component {
 			match: { params },
 		} = this.props
 		const question = await fetchAndUpdateQuestion(params.questionId)
-		console.log(question)
 		if (!question) {
 			this.setState({
 				questionExists: false,

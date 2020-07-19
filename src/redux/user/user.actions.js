@@ -12,7 +12,6 @@ const unsetUser = () => ({
 
 const updateUser = user => async dispatch => {
 	if (!user) {
-		console.log('unsetting user')
 		return dispatch(unsetUser())
 	}
 	const { uid, displayName, photoURL, email } = user
@@ -34,7 +33,6 @@ const updateUser = user => async dispatch => {
 				merge: true,
 			}
 		)
-	console.log('user', userData)
 	dispatch(setUser(userData))
 }
 

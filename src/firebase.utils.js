@@ -45,6 +45,12 @@ const fetchUserById = async uid => {
 	return null
 }
 
+/////////////////////////////
+
+// QUESTION CONTROLLER
+
+////////////////////////////
+
 const postQuestion = async ({
 	uid,
 	displayName,
@@ -201,14 +207,157 @@ const deUpvoteQuestion = async (uid, questionId) => {
 	}
 }
 
+/////////////////////////////////////
+
+// ANSWER CONTROLLERS
+
+////////////////////////////////////
+
+const postAnswer = async ({
+	uid,
+	questionId,
+	displayName,
+	photoURL,
+	answer,
+}) => {
+	const answerDoc = await firebase.firestore().collection('answers').add({
+		uid,
+		questionId,
+		displayName,
+		photoURL,
+		answer,
+		createdAt: Date.now(),
+	})
+	const answerData = {
+		id: answerDoc.id,
+		...answerDoc.data(),
+		upvotes: [],
+	}
+	return answerData
+}
+
+const fetchAnswers = async (questionId, start = 0) => {
+	try {
+		const answersRef = await firebase
+			.firestore()
+			.collection('answers')
+			.where('questionId', '==', questionId)
+			.orderBy('createdAt')
+			.startAfter(start)
+			.limit(20)
+			.get()
+		let answers = []
+		await Promise.all(
+			answersRef.docs.map(async answerDoc => {
+				let upvotes = await firebase
+					.firestore()
+					.collection(`/answers/${answerDoc.id}/upvotes`)
+					.get()
+				if (upvotes.empty) {
+					upvotes = []
+				} else {
+					upvotes = upvotes.docs
+				}
+				const answer = {
+					id: answerDoc.id,
+					...answerDoc.data(),
+					upvotes,
+				}
+				answers.push(answer)
+			})
+		)
+		return answers
+	} catch (err) {
+		console.log(err)
+		return []
+	}
+}
+
+const upvoteAnswer = async (uid, answerId) => {
+	if (!uid) {
+		return
+	}
+	try {
+		await firebase
+			.firestore()
+			.collection(`/answers/${answerId}/upvotes`)
+			.doc(uid)
+			.set(
+				{
+					uid,
+				},
+				{ merge: true }
+			)
+		const answerDoc = await firebase
+			.firestore()
+			.doc(`/answers/${answerId}`)
+			.get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/answers/${answerId}/upvotes`)
+			.get()
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		return {
+			id: answerDoc.id,
+			...answerDoc.data(),
+			upvotes,
+		}
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}
+
+const deUpvoteAnswer = async (uid, answerId) => {
+	try {
+		await firebase
+			.firestore()
+			.collection(`/answers/${answerId}/upvotes`)
+			.doc(uid)
+			.delete()
+		const answerDoc = await firebase
+			.firestore()
+			.doc(`/answers/${answerId}`)
+			.get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/answers/${answerId}/upvotes`)
+			.get()
+
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		return {
+			id: answerDoc.id,
+			...answerDoc.data(),
+			upvotes,
+		}
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}
+
 export {
 	firebase,
 	googleSignIn,
 	googleSignOut,
 	fetchUserById,
+	// question controllers
 	postQuestion,
 	fetchQuestions,
 	fetchQuestion,
 	upvoteQuestion,
 	deUpvoteQuestion,
+	// answer controllers
+	postAnswer,
+	fetchAnswers,
+	upvoteAnswer,
+	deUpvoteAnswer,
 }

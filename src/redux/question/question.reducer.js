@@ -9,7 +9,6 @@ const questionReducer = (state = initialQuestionState, action) => {
 		case QuestionActionTypes.APPEND_QUESTIONS:
 			return [...state, ...action.payload]
 		case QuestionActionTypes.UPDATE_QUESTION:
-			console.log(action.payload)
 			const questionIndex = state.findIndex(
 				question => question.id === action.payload.id
 			)
