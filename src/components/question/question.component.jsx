@@ -57,6 +57,7 @@ class Question extends React.Component {
 			createdAt,
 			isLoggedIn,
 			user,
+			expanded,
 		} = this.props
 		const { upvoted } = this.state
 		return (
@@ -71,11 +72,32 @@ class Question extends React.Component {
 						<small>{displayName}</small>
 					</Link>
 				</p>
-				<p className='m-0'>
-					<Link to='/' className='text-dark font-weight-bold'>
-						{question}
-					</Link>
-				</p>
+				<div className={expanded ? 'm-0 mt-2' : 'm-0'}>
+					{expanded ? (
+						<h5 className='font-weight-bold'>{question}</h5>
+					) : (
+						<Link
+							to={`/questions/${id}`}
+							className='text-dark font-weight-bold'>
+							{question}
+						</Link>
+					)}
+				</div>
+
+				{expanded ? (
+					<p className='py-2'>
+						<small className='p-0 font-weight-bold'>
+							Category: {category}
+						</small>
+						<br />
+						<small className='p-0 font-weight-bold'>
+							Discipline: {discipline}
+						</small>
+					</p>
+				) : (
+					''
+				)}
+
 				{isLoggedIn ? (
 					upvoted ? (
 						<button

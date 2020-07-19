@@ -6,6 +6,7 @@ import HomePage from './pages/home/home.component'
 import ProfilePage from './pages/profile/profile.component'
 import MenuPage from './pages/menu/menu.component'
 import PostQuestionPage from './pages/post-question/post-question.component'
+import QuestionPage from './pages/question/question.component'
 import Page404 from './pages/404/404.component'
 
 import Header from './components/header/header.component'
@@ -35,7 +36,11 @@ class App extends React.Component {
 						path='/post-question'
 						component={PostQuestionPage}
 					/>
-
+					<Route
+						exact
+						path='/questions/:questionId'
+						component={QuestionPage}
+					/>
 					<Route exact component={Page404} />
 				</Switch>
 			</div>

@@ -100,6 +100,36 @@ const fetchQuestions = async (start = 0) => {
 	}
 }
 
+const fetchQuestion = async questionId => {
+	try {
+		const questionDoc = await firebase
+			.firestore()
+			.doc(`/questions/${questionId}`)
+			.get()
+		let upvotesCollection = await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.get()
+		if (upvotesCollection.empty) {
+			upvotesCollection = []
+		} else {
+			upvotesCollection = upvotesCollection.docs
+		}
+		if (!questionDoc.exists) {
+			return null
+		}
+		const question = {
+			id: questionDoc.id,
+			...questionDoc.data(),
+			upvotes: upvotesCollection,
+		}
+		return question
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}
+
 const upvoteQuestion = async (uid, questionId) => {
 	if (!uid) {
 		return
@@ -178,6 +208,7 @@ export {
 	fetchUserById,
 	postQuestion,
 	fetchQuestions,
+	fetchQuestion,
 	upvoteQuestion,
 	deUpvoteQuestion,
 }
