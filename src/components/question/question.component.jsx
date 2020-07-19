@@ -58,6 +58,8 @@ class Question extends React.Component {
 			isLoggedIn,
 			user,
 			expanded,
+			// methods
+			toggleAnswerForm,
 		} = this.props
 		const { upvoted } = this.state
 		return (
@@ -86,13 +88,12 @@ class Question extends React.Component {
 
 				{expanded ? (
 					<p className='py-2'>
-						<small className='p-0 font-weight-bold'>
+						<span className='badge badge-info'>
 							Category: {category}
-						</small>
-						<br />
-						<small className='p-0 font-weight-bold'>
+						</span>{' '}
+						<span className='badge badge-info'>
 							Discipline: {discipline}
-						</small>
+						</span>
 					</p>
 				) : (
 					''
@@ -112,7 +113,7 @@ class Question extends React.Component {
 						<button
 							className='btn btn-link pl-0'
 							onClick={() => this.upvoteQuestion(user.uid, id)}>
-							<small>
+							<small className='not-upvoted'>
 								<i className='fas fa-arrow-up' />
 								{upvotes.length}
 							</small>
@@ -124,12 +125,18 @@ class Question extends React.Component {
 					</button>
 				)}
 
-				<Link to='/' className='btn btn-link pr-0 border-left'>
-					<small>
-						<i className='fas fa-pen' />
-						Answer
-					</small>
-				</Link>
+				{expanded ? (
+					<button
+						className='btn btn-link pr-0 border-left'
+						onClick={toggleAnswerForm}>
+						<small>
+							<i className='fas fa-pen' />
+							Answer
+						</small>
+					</button>
+				) : (
+					''
+				)}
 			</div>
 		)
 	}

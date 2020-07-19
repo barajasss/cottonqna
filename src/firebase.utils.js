@@ -228,9 +228,14 @@ const postAnswer = async ({
 		answer,
 		createdAt: Date.now(),
 	})
+	const answerDocData = await firebase
+		.firestore()
+		.collection('answers')
+		.doc(answerDoc.id)
+		.get()
 	const answerData = {
 		id: answerDoc.id,
-		...answerDoc.data(),
+		...answerDocData.data(),
 		upvotes: [],
 	}
 	return answerData

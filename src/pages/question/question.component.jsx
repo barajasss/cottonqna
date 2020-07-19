@@ -4,6 +4,8 @@ import './question.styles.scss'
 
 import { fetchAndUpdateQuestion } from '../../redux/question/question.actions'
 import Question from '../../components/question/question.component'
+import AnswerForm from '../../components/answer-form/answer-form.component'
+
 import { connect } from 'react-redux'
 
 class QuestionPage extends React.Component {
@@ -11,7 +13,13 @@ class QuestionPage extends React.Component {
 		super()
 		this.state = {
 			questionExists: true,
+			displayAnswerForm: false,
 		}
+	}
+	toggleAnswerForm = () => {
+		this.setState(state => ({
+			displayAnswerForm: !state.displayAnswerForm,
+		}))
 	}
 	componentDidMount = async () => {
 		const {
@@ -31,18 +39,23 @@ class QuestionPage extends React.Component {
 	}
 	render() {
 		const { question } = this.props
-		const { questionExists } = this.state
+		const { questionExists, displayAnswerForm } = this.state
 		return (
 			<div>
 				{questionExists ? (
 					question ? (
-						<Question {...question} expanded />
+						<Question
+							{...question}
+							toggleAnswerForm={this.toggleAnswerForm}
+							expanded
+						/>
 					) : (
 						''
 					)
 				) : (
 					<h3>Question Does Not Exist</h3>
 				)}
+				{displayAnswerForm ? <AnswerForm /> : ''}
 			</div>
 		)
 	}

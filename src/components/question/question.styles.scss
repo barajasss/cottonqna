@@ -21,7 +21,7 @@
 		color: dodgerblue;
 	}
 	button {
-		small {
+		small.not-upvoted {
 			filter: grayscale(60%);
 			opacity: 0.8;
 			font-weight: normal;
