@@ -21,8 +21,11 @@ class PostQuestionPage extends React.Component {
 			user: { uid, displayName, photoURL },
 			history,
 		} = this.props
-		const { question, category, discipline } = this.state
+		let { question, category, discipline } = this.state
 		e.preventDefault()
+		if (question[question.length - 1] !== '?') {
+			question = `${question}?`
+		}
 		await postQuestion({
 			uid,
 			displayName,
