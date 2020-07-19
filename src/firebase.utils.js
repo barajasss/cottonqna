@@ -76,7 +76,7 @@ const fetchQuestions = async (start = 0) => {
 		const questionsRef = await firebase
 			.firestore()
 			.collection('questions')
-			.orderBy('createdAt')
+			.orderBy('createdAt', 'asc')
 			.startAfter(start)
 			.limit(20)
 			.get()
@@ -85,6 +85,11 @@ const fetchQuestions = async (start = 0) => {
 				let upvotes = await firebase
 					.firestore()
 					.collection(`/questions/${questionDoc.id}/upvotes`)
+					.get()
+				let answers = await firebase
+					.firestore()
+					.collection('answers')
+					.where('questionId', '==', questionDoc.id)
 					.get()
 				if (upvotes.empty) {
 					upvotes = []
@@ -95,10 +100,29 @@ const fetchQuestions = async (start = 0) => {
 					id: questionDoc.id,
 					...questionDoc.data(),
 					upvotes,
+					firstAnswer: null,
+					answerCount: answers.docs.length,
+				}
+				if (!answers.empty) {
+					let firstAnswerUpvotes = await firebase
+						.firestore()
+						.collection(`/answers/${answers.docs[0].id}/upvotes`)
+						.get()
+					if (firstAnswerUpvotes.empty) {
+						firstAnswerUpvotes = []
+					} else {
+						firstAnswerUpvotes = firstAnswerUpvotes.docs
+					}
+					question.firstAnswer = {
+						id: answers.docs[0].id,
+						...answers.docs[0].data(),
+						upvotes: firstAnswerUpvotes,
+					}
 				}
 				questions.push(question)
 			})
 		)
+		console.log(questions)
 		return questions
 	} catch (err) {
 		console.log(err)
@@ -112,6 +136,13 @@ const fetchQuestion = async questionId => {
 			.firestore()
 			.doc(`/questions/${questionId}`)
 			.get()
+
+		let answers = await firebase
+			.firestore()
+			.collection('answers')
+			.where('questionId', '==', questionId)
+			.get()
+
 		let upvotesCollection = await firebase
 			.firestore()
 			.collection(`/questions/${questionId}/upvotes`)
@@ -128,6 +159,8 @@ const fetchQuestion = async questionId => {
 			id: questionDoc.id,
 			...questionDoc.data(),
 			upvotes: upvotesCollection,
+			firstAnswer: null,
+			answerCount: answers.docs.length,
 		}
 		return question
 	} catch (err) {

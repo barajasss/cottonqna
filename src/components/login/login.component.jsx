@@ -6,8 +6,8 @@ import { googleSignIn } from '../../firebase.utils'
 class Login extends React.Component {
 	render() {
 		return (
-			<div className='login card bg-info'>
-				<p>
+			<div className='login card bg-info p-3'>
+				<p className='p-0'>
 					<i className='fas fa-info-circle'></i> To view profile,
 					options and ask or answer questions, click continue with
 					google. If you are a cottonian, please volunteer and help

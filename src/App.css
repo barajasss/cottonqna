@@ -9,6 +9,10 @@ svg {
 	transform: scale(1.2);
 }
 
+a {
+	text-decoration: none !important;
+}
+
 @media screen and (min-width: 720px) {
 	.App {
 		margin: 0 auto;

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 
 import { connect } from 'react-redux'
 
+import Answer from '../answer/answer.component'
+
 import {
 	upvoteAndUpdateQuestion,
 	deUpvoteAndUpdateQuestion,
@@ -55,6 +57,8 @@ class Question extends React.Component {
 			discipline,
 			upvotes,
 			createdAt,
+			answerCount,
+			firstAnswer,
 			isLoggedIn,
 			user,
 			expanded,
@@ -84,6 +88,9 @@ class Question extends React.Component {
 							{question}
 						</Link>
 					)}
+					<p className='m-0'>
+						<small>{new Date(createdAt).toDateString()}</small>
+					</p>
 				</div>
 
 				{expanded ? (
@@ -106,7 +113,8 @@ class Question extends React.Component {
 							onClick={() => this.deUpvoteQuestion(user.uid, id)}>
 							<small className='upvoted'>
 								<i className='fas fa-arrow-up' />
-								{upvotes.length}
+								{upvotes.length}{' '}
+								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
 							</small>
 						</button>
 					) : (
@@ -115,17 +123,21 @@ class Question extends React.Component {
 							onClick={() => this.upvoteQuestion(user.uid, id)}>
 							<small className='not-upvoted'>
 								<i className='fas fa-arrow-up' />
-								{upvotes.length}
+								{upvotes.length}{' '}
+								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
 							</small>
 						</button>
 					)
 				) : (
-					<button>
-						<small>{upvotes.length} upvotes</small>
+					<button className='btn btn-link pl-0' disabled>
+						<small>
+							{upvotes.length}{' '}
+							{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+						</small>
 					</button>
 				)}
 
-				{expanded ? (
+				{expanded && isLoggedIn ? (
 					<button
 						className='btn btn-link pr-0 border-left'
 						onClick={toggleAnswerForm}>
@@ -135,8 +147,13 @@ class Question extends React.Component {
 						</small>
 					</button>
 				) : (
-					''
+					<button className='btn btn-link pr-0 border-left' disabled>
+						<small>{answerCount} Answers</small>
+					</button>
 				)}
+				<div className='pl-3'>
+					{firstAnswer ? <Answer {...firstAnswer} /> : ''}
+				</div>
 			</div>
 		)
 	}

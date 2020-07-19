@@ -26,16 +26,22 @@ class AnswerForm extends React.Component {
 			postAndUpdateAnswer,
 			user,
 			match: { params },
+			toggleAnswerForm,
 		} = this.props
 		const { answer } = this.state
 		const { uid, displayName, photoURL } = user
-		await postAndUpdateAnswer({
+		const answerDoc = {
 			uid,
 			displayName,
 			photoURL,
 			answer,
 			questionId: params.questionId,
+		}
+		this.setState({
+			answer: '',
 		})
+		toggleAnswerForm()
+		await postAndUpdateAnswer(answerDoc)
 	}
 
 	render() {

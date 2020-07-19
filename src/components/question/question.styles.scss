@@ -7,9 +7,6 @@
 
 .question {
 	button,
-	a,
-	a:focus,
-	a:hover,
 	button:focus,
 	button:hover {
 		outline: none;
@@ -20,16 +17,17 @@
 		text-decoration: none;
 		color: dodgerblue;
 	}
-	button {
-		small.not-upvoted {
-			filter: grayscale(60%);
-			opacity: 0.8;
-			font-weight: normal;
-		}
-		small.upvoted {
-			filter: grayscale(0);
-			opacity: 1;
-			font-weight: bolder;
-		}
-	}
+}
+small.not-upvoted,
+small.not-upvoted:focus {
+	filter: grayscale(60%);
+	opacity: 0.8;
+	font-weight: normal;
+	text-decoration: none;
+}
+small.upvoted,
+small.upvoted:focus {
+	filter: grayscale(0);
+	opacity: 1;
+	font-weight: bolder;
 }
