@@ -166,7 +166,10 @@ class Question extends React.Component {
 					</button>
 				) : (
 					<button className='btn btn-link pr-0' disabled>
-						<small>{answerCount} Answers</small>
+						<small>
+							{answerCount}{' '}
+							{answerCount === 1 ? 'answer' : 'answers'}
+						</small>
 					</button>
 				)}
 				<div className='pl-3'>

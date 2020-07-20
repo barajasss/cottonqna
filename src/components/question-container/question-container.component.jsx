@@ -22,6 +22,7 @@ class QuestionContainer extends React.Component {
 				{questions.map(questionDoc => (
 					<Question key={questionDoc.id} {...questionDoc} />
 				))}
+				{questions.length === 0 ? <h4>No questions found</h4> : ''}
 			</div>
 		)
 	}

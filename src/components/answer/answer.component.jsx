@@ -17,9 +17,9 @@ class Answer extends React.Component {
 		}
 	}
 
-	upvoteAnswer = async (uid, id) => {
+	upvoteAnswer = async (uid, questionId, id) => {
 		const { upvoteAndUpdateAnswer } = this.props
-		await upvoteAndUpdateAnswer(uid, id)
+		await upvoteAndUpdateAnswer(uid, questionId, id)
 		this.setState({
 			upvoted: true,
 		})
@@ -90,7 +90,9 @@ class Answer extends React.Component {
 					) : (
 						<button
 							className='btn btn-link pl-0'
-							onClick={() => this.upvoteAnswer(user.uid, id)}>
+							onClick={() =>
+								this.upvoteAnswer(user.uid, questionId, id)
+							}>
 							<small className='not-upvoted'>
 								<i className='fas fa-arrow-up' />
 								Upvote
@@ -127,8 +129,8 @@ const mapStateToProps = ({ user }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	upvoteAndUpdateAnswer: (uid, answerId) =>
-		dispatch(upvoteAndUpdateAnswer(uid, answerId)),
+	upvoteAndUpdateAnswer: (uid, questionId, answerId) =>
+		dispatch(upvoteAndUpdateAnswer(uid, questionId, answerId)),
 	deUpvoteAndUpdateAnswer: (uid, answerId) =>
 		dispatch(deUpvoteAndUpdateAnswer(uid, answerId)),
 })

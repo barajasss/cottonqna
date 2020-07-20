@@ -40,8 +40,8 @@ const postAndUpdateAnswer = answer => async dispatch => {
 	}
 }
 
-const upvoteAndUpdateAnswer = (uid, answerId) => async dispatch => {
-	const upvotedAnswer = await upvoteAnswer(uid, answerId)
+const upvoteAndUpdateAnswer = (uid, questionId, answerId) => async dispatch => {
+	const upvotedAnswer = await upvoteAnswer(uid, questionId, answerId)
 	if (upvotedAnswer) {
 		dispatch(updateAnswer(upvotedAnswer))
 	}

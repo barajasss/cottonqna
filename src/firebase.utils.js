@@ -262,10 +262,23 @@ const deleteQuestionFirebase = async questionId => {
 			.collection(`/answers`)
 			.where('questionId', '==', questionId)
 			.get()
+		const upvotes = await firebase
+			.firestore()
+			.collectionGroup('upvotes')
+			.where('questionId', '==', questionId)
+			.get()
+
+		if (!upvotes.empty) {
+			await Promise.all(
+				upvotes.docs.map(async upvoteDoc => {
+					await upvoteDoc.ref.delete()
+				})
+			)
+		}
 		if (!answers.empty) {
 			await Promise.all(
 				answers.docs.map(async answerDoc => {
-					await answerDoc.delete()
+					await answerDoc.ref.delete()
 				})
 			)
 		}
@@ -286,6 +299,7 @@ const upvoteQuestion = async (uid, questionId) => {
 			.set(
 				{
 					uid,
+					questionId,
 				},
 				{ merge: true }
 			)
@@ -416,7 +430,7 @@ const fetchAnswers = async (questionId, start = 0) => {
 	}
 }
 
-const upvoteAnswer = async (uid, answerId) => {
+const upvoteAnswer = async (uid, questionId, answerId) => {
 	if (!uid) {
 		return
 	}
@@ -428,6 +442,8 @@ const upvoteAnswer = async (uid, answerId) => {
 			.set(
 				{
 					uid,
+					questionId,
+					answerId,
 				},
 				{ merge: true }
 			)
