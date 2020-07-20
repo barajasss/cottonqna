@@ -46,16 +46,21 @@ class Answer extends React.Component {
 		const {
 			uid,
 			id,
+			questionId,
 			displayName,
 			photoURL,
 			answer,
 			upvotes,
 			isLoggedIn,
 			user,
+			embedded,
 		} = this.props
 		const { upvoted } = this.state
 		return (
-			<div className='my-2 py-2 border-bottom answer'>
+			<div
+				className={`my-2 py-2 ${
+					embedded ? '' : 'border-bottom'
+				} answer`}>
 				<p className='pb-1 m-0'>
 					<img
 						src={photoURL}
@@ -66,17 +71,20 @@ class Answer extends React.Component {
 						<small>{displayName}</small>
 					</Link>
 				</p>
-				<p className='m-0'>{answer}</p>
+				<p className='m-0'>
+					{embedded && answer.length > 100
+						? `${answer.slice(0, 100)}...`
+						: answer}
+				</p>
 
-				{isLoggedIn ? (
+				{isLoggedIn && !embedded ? (
 					upvoted ? (
 						<button
 							className='btn btn-link pl-0'
 							onClick={() => this.deUpvoteAnswer(user.uid, id)}>
 							<small className='upvoted'>
 								<i className='fas fa-arrow-up' />
-								{upvotes.length}{' '}
-								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+								Upvoted
 							</small>
 						</button>
 					) : (
@@ -85,18 +93,28 @@ class Answer extends React.Component {
 							onClick={() => this.upvoteAnswer(user.uid, id)}>
 							<small className='not-upvoted'>
 								<i className='fas fa-arrow-up' />
-								{upvotes.length}{' '}
-								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+								Upvote
 							</small>
 						</button>
 					)
 				) : (
-					<button className='btn btn-link pl-0' disabled>
+					''
+				)}
+				<button className='btn btn-link pl-0' disabled>
+					<small>
+						{upvotes.length}{' '}
+						{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+					</small>
+				</button>
+				<br />
+				{embedded ? (
+					<Link to={`/questions/${questionId}`}>
 						<small>
-							{upvotes.length}{' '}
-							{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+							View More <i className='fas fa-arrow-right' />
 						</small>
-					</button>
+					</Link>
+				) : (
+					''
 				)}
 			</div>
 		)

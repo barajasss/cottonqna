@@ -29,7 +29,6 @@ const googleSignIn = () => {
 }
 
 const googleSignOut = () => {
-	console.log('signout')
 	firebase.auth().signOut()
 }
 
@@ -122,7 +121,6 @@ const fetchQuestions = async (start = 0) => {
 				questions.push(question)
 			})
 		)
-		console.log(questions)
 		return questions
 	} catch (err) {
 		console.log(err)

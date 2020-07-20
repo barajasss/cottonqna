@@ -14,7 +14,10 @@ const questionReducer = (state = initialQuestionState, action) => {
 			)
 			if (questionIndex !== -1) {
 				const copiedState = [...state]
-				copiedState[questionIndex] = action.payload
+				copiedState[questionIndex] = {
+					...copiedState[questionIndex],
+					...action.payload,
+				}
 				return [...copiedState]
 			}
 			return state

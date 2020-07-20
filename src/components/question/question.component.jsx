@@ -67,7 +67,7 @@ class Question extends React.Component {
 		} = this.props
 		const { upvoted } = this.state
 		return (
-			<div className='question py-2 border-bottom'>
+			<div className='question py-2'>
 				<p className='pb-1 m-0'>
 					<img
 						src={photoURL}
@@ -88,8 +88,8 @@ class Question extends React.Component {
 							{question}
 						</Link>
 					)}
-					<p className='m-0'>
-						<small>{new Date(createdAt).toDateString()}</small>
+					<p className='m-0 date-display'>
+						{new Date(createdAt).toDateString()}
 					</p>
 				</div>
 
@@ -165,12 +165,12 @@ class Question extends React.Component {
 						</small>
 					</button>
 				) : (
-					<button className='btn btn-link pr-0 border-left' disabled>
+					<button className='btn btn-link pr-0' disabled>
 						<small>{answerCount} Answers</small>
 					</button>
 				)}
 				<div className='pl-3'>
-					{firstAnswer ? <Answer {...firstAnswer} /> : ''}
+					{firstAnswer ? <Answer {...firstAnswer} embedded /> : ''}
 				</div>
 			</div>
 		)
