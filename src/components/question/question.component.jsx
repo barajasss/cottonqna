@@ -130,30 +130,12 @@ class Question extends React.Component {
 					''
 				)}
 
-				{isLoggedIn ? (
-					upvoted ? (
-						<button className='btn btn-link pl-0' disabled>
-							<small>
-								{upvotes.length}{' '}
-								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
-							</small>
-						</button>
-					) : (
-						<button className='btn btn-link pl-0' disabled>
-							<small>
-								{upvotes.length}{' '}
-								{upvotes.length === 1 ? 'upvote' : 'upvotes'}
-							</small>
-						</button>
-					)
-				) : (
-					<button className='btn btn-link pl-0' disabled>
-						<small>
-							{upvotes.length}{' '}
-							{upvotes.length === 1 ? 'upvote' : 'upvotes'}
-						</small>
-					</button>
-				)}
+				<button className='btn btn-link pl-0' disabled>
+					<small>
+						{upvotes.length}{' '}
+						{upvotes.length === 1 ? 'upvote' : 'upvotes'}
+					</small>
+				</button>
 
 				{expanded && isLoggedIn ? (
 					<button
