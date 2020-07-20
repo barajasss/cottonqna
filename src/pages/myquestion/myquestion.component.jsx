@@ -6,6 +6,8 @@ import { Redirect } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
 import Question from '../../components/question/question.component'
+import EditQuestion from '../../components/edit-question/edit-question.component'
+
 import { fetchByUidAndUpdateQuestions } from '../../redux/question/question.actions'
 
 class MyQuestionPage extends React.Component {
@@ -29,7 +31,10 @@ class MyQuestionPage extends React.Component {
 				<h3 className='pb-3 border-bottom'>My Questions</h3>
 				{!isLoggedIn ? <Redirect to='/' /> : ''}
 				{questions.map(question => (
-					<Question key={question.id} {...question} />
+					<div key={question.id}>
+						<Question {...question} />
+						<EditQuestion {...question} />
+					</div>
 				))}
 			</div>
 		)
