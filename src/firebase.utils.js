@@ -69,6 +69,45 @@ const postQuestion = async ({
 	})
 }
 
+const fetchQuestion = async questionId => {
+	try {
+		const questionDoc = await firebase
+			.firestore()
+			.doc(`/questions/${questionId}`)
+			.get()
+
+		let answers = await firebase
+			.firestore()
+			.collection('answers')
+			.where('questionId', '==', questionId)
+			.get()
+
+		let upvotesCollection = await firebase
+			.firestore()
+			.collection(`/questions/${questionId}/upvotes`)
+			.get()
+		if (upvotesCollection.empty) {
+			upvotesCollection = []
+		} else {
+			upvotesCollection = upvotesCollection.docs
+		}
+		if (!questionDoc.exists) {
+			return null
+		}
+		const question = {
+			id: questionDoc.id,
+			...questionDoc.data(),
+			upvotes: upvotesCollection,
+			firstAnswer: null,
+			answerCount: answers.docs.length,
+		}
+		return question
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}
+
 const fetchQuestions = async (start = 0) => {
 	const questions = []
 	try {
@@ -77,7 +116,7 @@ const fetchQuestions = async (start = 0) => {
 			.collection('questions')
 			.orderBy('createdAt', 'asc')
 			.startAfter(start)
-			.limit(20)
+			.limit(10)
 			.get()
 		await Promise.all(
 			questionsRef.docs.map(async questionDoc => {
@@ -128,42 +167,47 @@ const fetchQuestions = async (start = 0) => {
 	}
 }
 
-const fetchQuestion = async questionId => {
+const fetchQuestionsByUid = async (uid, start = 0) => {
+	const questions = []
 	try {
-		const questionDoc = await firebase
+		const questionsRef = await firebase
 			.firestore()
-			.doc(`/questions/${questionId}`)
+			.collection('questions')
+			.where('uid', '==', uid)
+			.orderBy('createdAt', 'asc')
+			.startAfter(start)
+			.limit(10)
 			.get()
-
-		let answers = await firebase
-			.firestore()
-			.collection('answers')
-			.where('questionId', '==', questionId)
-			.get()
-
-		let upvotesCollection = await firebase
-			.firestore()
-			.collection(`/questions/${questionId}/upvotes`)
-			.get()
-		if (upvotesCollection.empty) {
-			upvotesCollection = []
-		} else {
-			upvotesCollection = upvotesCollection.docs
-		}
-		if (!questionDoc.exists) {
-			return null
-		}
-		const question = {
-			id: questionDoc.id,
-			...questionDoc.data(),
-			upvotes: upvotesCollection,
-			firstAnswer: null,
-			answerCount: answers.docs.length,
-		}
-		return question
+		await Promise.all(
+			questionsRef.docs.map(async questionDoc => {
+				let upvotes = await firebase
+					.firestore()
+					.collection(`/questions/${questionDoc.id}/upvotes`)
+					.get()
+				let answers = await firebase
+					.firestore()
+					.collection('answers')
+					.where('questionId', '==', questionDoc.id)
+					.get()
+				if (upvotes.empty) {
+					upvotes = []
+				} else {
+					upvotes = upvotes.docs
+				}
+				const question = {
+					id: questionDoc.id,
+					...questionDoc.data(),
+					upvotes,
+					firstAnswer: null,
+					answerCount: answers.docs.length,
+				}
+				questions.push(question)
+			})
+		)
+		return questions
 	} catch (err) {
 		console.log(err)
-		return null
+		return []
 	}
 }
 
@@ -388,6 +432,7 @@ export {
 	// question controllers
 	postQuestion,
 	fetchQuestions,
+	fetchQuestionsByUid,
 	fetchQuestion,
 	upvoteQuestion,
 	deUpvoteQuestion,

@@ -1,7 +1,8 @@
 import QuestionActionTypes from './question.types'
 import {
-	fetchQuestions,
 	fetchQuestion,
+	fetchQuestions,
+	fetchQuestionsByUid,
 	upvoteQuestion,
 	deUpvoteQuestion,
 } from '../../firebase.utils'
@@ -48,6 +49,11 @@ const fetchAndUpdateQuestions = () => async dispatch => {
 	dispatch(setQuestions(questions))
 }
 
+const fetchByUidAndUpdateQuestions = uid => async dispatch => {
+	const questions = await fetchQuestionsByUid(uid)
+	dispatch(setQuestions(questions))
+}
+
 const fetchNextAndUpdateQuestions = () => async (dispatch, getState) => {
 	const questions = await fetchQuestions(getState().questions.length)
 	dispatch(appendQuestions(questions))
@@ -61,5 +67,6 @@ export {
 	deUpvoteAndUpdateQuestion,
 	fetchAndUpdateQuestion,
 	fetchAndUpdateQuestions,
+	fetchByUidAndUpdateQuestions,
 	fetchNextAndUpdateQuestions,
 }

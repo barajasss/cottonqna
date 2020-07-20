@@ -10,7 +10,10 @@ import './menu.styles.scss'
 
 class MenuPage extends React.Component {
 	render() {
-		const { isLoggedIn } = this.props
+		const {
+			isLoggedIn,
+			match: { url },
+		} = this.props
 		return (
 			<div className='menu'>
 				<Helmet>
@@ -31,31 +34,34 @@ class MenuPage extends React.Component {
 					</Link>
 				</div>
 				<br />
-				{ isLoggedIn ? 
-				<div className='list-group'>
-					<Link
-						to='/'
-						className='list-group-item list-group-item-action list-group-item-light'>
-						<i className='fas fa-book'></i> My Questions
-					</Link>
-					<Link
-						to='/'
-						className='list-group-item list-group-item-action list-group-item-light'>
-						<i className='fas fa-book'></i> My Answers
-					</Link>
-					<button
-						onClick={googleSignOut}
-						className='list-group-item list-group-item-action list-group-item-light'>
-						<i className='fas fa-sign-out-alt'></i> Log Out
-					</button>
-				</div> : '' }
+				{isLoggedIn ? (
+					<div className='list-group'>
+						<Link
+							to={`${url}/myquestions`}
+							className='list-group-item list-group-item-action list-group-item-light'>
+							<i className='fas fa-book'></i> My Questions
+						</Link>
+						<Link
+							to='/'
+							className='list-group-item list-group-item-action list-group-item-light'>
+							<i className='fas fa-book'></i> My Answers
+						</Link>
+						<button
+							onClick={googleSignOut}
+							className='list-group-item list-group-item-action list-group-item-light'>
+							<i className='fas fa-sign-out-alt'></i> Log Out
+						</button>
+					</div>
+				) : (
+					''
+				)}
 			</div>
 		)
 	}
 }
 
 const mapStateToProps = ({ user }) => ({
-	isLoggedIn: user.isLoggedIn
+	isLoggedIn: user.isLoggedIn,
 })
 
 export default connect(mapStateToProps)(MenuPage)
