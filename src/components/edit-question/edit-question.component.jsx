@@ -1,6 +1,12 @@
 import React from 'react'
 import './edit-question.styles.scss'
 
+import { connect } from 'react-redux'
+import {
+	updateQuestionAsync,
+	deleteQuestionAsync,
+} from '../../redux/question/question.actions'
+
 class EditQuestion extends React.Component {
 	constructor(props) {
 		super(props)
@@ -21,27 +27,29 @@ class EditQuestion extends React.Component {
 			displayEditForm: !state.displayEditForm,
 		}))
 	}
+	deleteQuestion = async questionId => {
+		const { deleteQuestionAsync } = this.props
+		await deleteQuestionAsync(questionId)
+	}
 	handleSubmit = async e => {
-		const {
-			user: { uid, displayName, photoURL },
-			history,
-		} = this.props
-		let { question, category, discipline } = this.state
 		e.preventDefault()
+		const { id, updateQuestionAsync } = this.props
+		let { question, category, discipline } = this.state
 		if (question[question.length - 1] !== '?') {
 			question = `${question}?`
 		}
-		// await postQuestion({
-		// 	uid,
-		// 	displayName,
-		// 	photoURL,
-		// 	question,
-		// 	category,
-		// 	discipline,
-		// })
+		await updateQuestionAsync({
+			id,
+			question,
+			category,
+			discipline,
+		})
+		this.setState(state => ({
+			displayEditForm: false,
+		}))
 	}
 	render() {
-		// const { isLoggedIn } = this.props
+		const { id } = this.props
 		const { question, category, discipline, displayEditForm } = this.state
 		return (
 			<div>
@@ -55,7 +63,7 @@ class EditQuestion extends React.Component {
 				</button>
 				<button
 					className='btn btn-link pl-0 mt-n3 mb-2 ml-2 text-danger'
-					data-target='#confirm-delete-modal'
+					data-target={`#modal-${id}`}
 					data-toggle='modal'>
 					<small>
 						<i className='fas fa-trash' />
@@ -63,7 +71,7 @@ class EditQuestion extends React.Component {
 					</small>
 				</button>
 
-				<div className='modal fade' id='confirm-delete-modal'>
+				<div className='modal fade' id={`modal-${id}`}>
 					<div
 						className='modal-dialog modal-dialog-centered'
 						role='document'>
@@ -74,14 +82,19 @@ class EditQuestion extends React.Component {
 									<div className='col'>
 										<button
 											className='btn btn-block btn-danger'
-											data-dismiss='modal'>
+											data-dismiss='modal'
+											type='button'
+											onClick={() => {
+												this.deleteQuestion(id)
+											}}>
 											Yes
 										</button>
 									</div>
 									<div className='col'>
 										<button
 											className='btn btn-block btn-warning'
-											data-dismiss='modal'>
+											data-dismiss='modal'
+											type='button'>
 											No
 										</button>
 									</div>
@@ -164,4 +177,10 @@ class EditQuestion extends React.Component {
 	}
 }
 
-export default EditQuestion
+const mapDispatchToProps = dispatch => ({
+	updateQuestionAsync: question => dispatch(updateQuestionAsync(question)),
+	deleteQuestionAsync: questionId =>
+		dispatch(deleteQuestionAsync(questionId)),
+})
+
+export default connect(null, mapDispatchToProps)(EditQuestion)

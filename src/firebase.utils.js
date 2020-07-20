@@ -211,6 +211,69 @@ const fetchQuestionsByUid = async (uid, start = 0) => {
 	}
 }
 
+const updateQuestionFirebase = async ({
+	id,
+	question,
+	category,
+	discipline,
+}) => {
+	try {
+		await firebase
+			.firestore()
+			.collection('questions')
+			.doc(id)
+			.set({ question, category, discipline }, { merge: true })
+		const questionDoc = await firebase
+			.firestore()
+			.doc(`/questions/${id}`)
+			.get()
+		const answers = await firebase
+			.firestore()
+			.collection('answers')
+			.where('questionId', '==', id)
+			.get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/questions/${id}/upvotes`)
+			.get()
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		const updatedQuestion = {
+			id: questionDoc.id,
+			...questionDoc.data(),
+			upvotes,
+			firstAnswer: null,
+			answerCount: answers.docs.length,
+		}
+		return updatedQuestion
+	} catch (err) {
+		return null
+	}
+}
+
+const deleteQuestionFirebase = async questionId => {
+	try {
+		await firebase.firestore().doc(`/questions/${questionId}`).delete()
+		const answers = await firebase
+			.firestore()
+			.collection(`/answers`)
+			.where('questionId', '==', questionId)
+			.get()
+		if (!answers.empty) {
+			await Promise.all(
+				answers.docs.map(async answerDoc => {
+					await answerDoc.delete()
+				})
+			)
+		}
+	} catch (err) {
+		console.log(err)
+	}
+}
+
 const upvoteQuestion = async (uid, questionId) => {
 	if (!uid) {
 		return
@@ -434,6 +497,8 @@ export {
 	fetchQuestions,
 	fetchQuestionsByUid,
 	fetchQuestion,
+	updateQuestionFirebase,
+	deleteQuestionFirebase,
 	upvoteQuestion,
 	deUpvoteQuestion,
 	// answer controllers

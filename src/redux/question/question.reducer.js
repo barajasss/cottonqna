@@ -21,6 +21,11 @@ const questionReducer = (state = initialQuestionState, action) => {
 				return [...copiedState]
 			}
 			return state
+		case QuestionActionTypes.REMOVE_QUESTION:
+			const copiedState = [...state].filter(
+				question => question.id !== action.payload
+			)
+			return copiedState
 		default:
 			return state
 	}

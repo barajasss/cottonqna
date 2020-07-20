@@ -3,6 +3,8 @@ import {
 	fetchQuestion,
 	fetchQuestions,
 	fetchQuestionsByUid,
+	updateQuestionFirebase,
+	deleteQuestionFirebase,
 	upvoteQuestion,
 	deUpvoteQuestion,
 } from '../../firebase.utils'
@@ -21,6 +23,29 @@ const updateQuestion = question => ({
 	type: QuestionActionTypes.UPDATE_QUESTION,
 	payload: question,
 })
+
+const removeQuestion = questionId => ({
+	type: QuestionActionTypes.REMOVE_QUESTION,
+	payload: questionId,
+})
+
+const updateQuestionAsync = question => async dispatch => {
+	try {
+		const updatedQuestion = await updateQuestionFirebase(question)
+		dispatch(updateQuestion(updatedQuestion))
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+const deleteQuestionAsync = questionId => async dispatch => {
+	try {
+		await deleteQuestionFirebase(questionId)
+		dispatch(removeQuestion(questionId))
+	} catch (err) {
+		console.log(err)
+	}
+}
 
 const upvoteAndUpdateQuestion = (uid, questionId) => async dispatch => {
 	const upvotedQuestion = await upvoteQuestion(uid, questionId)
@@ -63,6 +88,9 @@ export {
 	setQuestions,
 	appendQuestions,
 	updateQuestion,
+	removeQuestion,
+	updateQuestionAsync,
+	deleteQuestionAsync,
 	upvoteAndUpdateQuestion,
 	deUpvoteAndUpdateQuestion,
 	fetchAndUpdateQuestion,
