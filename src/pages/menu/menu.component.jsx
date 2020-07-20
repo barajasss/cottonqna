@@ -42,7 +42,7 @@ class MenuPage extends React.Component {
 							<i className='fas fa-book'></i> My Questions
 						</Link>
 						<Link
-							to='/'
+							to={`${url}/myanswers`}
 							className='list-group-item list-group-item-action list-group-item-light'>
 							<i className='fas fa-book'></i> My Answers
 						</Link>

@@ -429,6 +429,43 @@ const fetchAnswers = async (questionId, start = 0) => {
 	}
 }
 
+const fetchAnswersByUid = async (uid, start = 0) => {
+	const answers = []
+	try {
+		const answersRef = await firebase
+			.firestore()
+			.collection('answers')
+			.where('uid', '==', uid)
+			.orderBy('createdAt', 'asc')
+			.startAfter(start)
+			.limit(10)
+			.get()
+		await Promise.all(
+			answersRef.docs.map(async answerDoc => {
+				let upvotes = await firebase
+					.firestore()
+					.collection(`/answers/${answerDoc.id}/upvotes`)
+					.get()
+				if (upvotes.empty) {
+					upvotes = []
+				} else {
+					upvotes = upvotes.docs
+				}
+				const answer = {
+					id: answerDoc.id,
+					...answerDoc.data(),
+					upvotes,
+				}
+				answers.push(answer)
+			})
+		)
+		return answers
+	} catch (err) {
+		console.log(err)
+		return []
+	}
+}
+
 const updateAnswerFirebase = async ({ id, answer }) => {
 	try {
 		await firebase
@@ -568,6 +605,7 @@ export {
 	// answer controllers
 	postAnswer,
 	fetchAnswers,
+	fetchAnswersByUid,
 	updateAnswerFirebase,
 	deleteAnswerFirebase,
 	upvoteAnswer,

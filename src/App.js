@@ -8,6 +8,7 @@ import MenuPage from './pages/menu/menu.component'
 import PostQuestionPage from './pages/post-question/post-question.component'
 import QuestionPage from './pages/question/question.component'
 import MyQuestionPage from './pages/myquestion/myquestion.component'
+import MyAnswerPage from './pages/myanswer/myanswer.component'
 
 import Page404 from './pages/404/404.component'
 
@@ -47,6 +48,11 @@ class App extends React.Component {
 						exact
 						path='/menu/myquestions'
 						component={MyQuestionPage}
+					/>
+					<Route
+						exact
+						path='/menu/myanswers'
+						component={MyAnswerPage}
 					/>
 					<Route exact component={Page404} />
 				</Switch>

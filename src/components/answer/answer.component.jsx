@@ -57,10 +57,7 @@ class Answer extends React.Component {
 		} = this.props
 		const { upvoted } = this.state
 		return (
-			<div
-				className={`my-2 py-2 ${
-					embedded ? '' : 'border-bottom'
-				} answer`}>
+			<div className={`my-2 py-2 answer`}>
 				<p className='pb-1 m-0'>
 					<img
 						src={photoURL}

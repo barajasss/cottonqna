@@ -1,8 +1,9 @@
 import AnswerActionTypes from './answer.types'
 
 import {
-	fetchAnswers,
 	postAnswer,
+	fetchAnswers,
+	fetchAnswersByUid,
 	updateAnswerFirebase,
 	deleteAnswerFirebase,
 	upvoteAnswer,
@@ -35,16 +36,21 @@ const removeAnswer = answerId => ({
 
 // thunks
 
-const fetchAndUpdateAnswers = questionId => async dispatch => {
-	const answers = await fetchAnswers(questionId)
-	dispatch(setAnswers(answers))
-}
-
 const postAndUpdateAnswer = answer => async dispatch => {
 	const answerDoc = await postAnswer(answer)
 	if (answerDoc) {
 		dispatch(addAnswer(answerDoc))
 	}
+}
+
+const fetchAndUpdateAnswers = questionId => async dispatch => {
+	const answers = await fetchAnswers(questionId)
+	dispatch(setAnswers(answers))
+}
+
+const fetchByUidAndUpdateAnswers = uid => async dispatch => {
+	const answers = await fetchAnswersByUid(uid)
+	dispatch(setAnswers(answers))
 }
 
 const updateAnswerAsync = answer => async dispatch => {
@@ -87,6 +93,7 @@ export {
 	removeAnswer,
 	// thunks
 	fetchAndUpdateAnswers,
+	fetchByUidAndUpdateAnswers,
 	postAndUpdateAnswer,
 	updateAnswerAsync,
 	deleteAnswerAsync,
