@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import { findAllByTestId } from '@testing-library/react'
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyBUm7VDXmBH8HjHaOMSdvwtn_OkuQEY3GA',
@@ -259,7 +258,7 @@ const deleteQuestionFirebase = async questionId => {
 		await firebase.firestore().doc(`/questions/${questionId}`).delete()
 		const answers = await firebase
 			.firestore()
-			.collection(`/answers`)
+			.collection(`answers`)
 			.where('questionId', '==', questionId)
 			.get()
 		const upvotes = await firebase
@@ -430,6 +429,55 @@ const fetchAnswers = async (questionId, start = 0) => {
 	}
 }
 
+const updateAnswerFirebase = async ({ id, answer }) => {
+	try {
+		await firebase
+			.firestore()
+			.collection('answers')
+			.doc(id)
+			.set({ answer }, { merge: true })
+		const answerDoc = await firebase.firestore().doc(`/answers/${id}`).get()
+		let upvotes = await firebase
+			.firestore()
+			.collection(`/answers/${id}/upvotes`)
+			.get()
+		if (upvotes.empty) {
+			upvotes = []
+		} else {
+			upvotes = upvotes.docs
+		}
+		const updatedAnswer = {
+			id: answerDoc.id,
+			...answerDoc.data(),
+			upvotes,
+		}
+		return updatedAnswer
+	} catch (err) {
+		return null
+	}
+}
+
+const deleteAnswerFirebase = async answerId => {
+	try {
+		await firebase.firestore().doc(`/answers/${answerId}`).delete()
+		const upvotes = await firebase
+			.firestore()
+			.collectionGroup('upvotes')
+			.where('answerId', '==', answerId)
+			.get()
+
+		if (!upvotes.empty) {
+			await Promise.all(
+				upvotes.docs.map(async upvoteDoc => {
+					await upvoteDoc.ref.delete()
+				})
+			)
+		}
+	} catch (err) {
+		console.log(err)
+	}
+}
+
 const upvoteAnswer = async (uid, questionId, answerId) => {
 	if (!uid) {
 		return
@@ -520,6 +568,8 @@ export {
 	// answer controllers
 	postAnswer,
 	fetchAnswers,
+	updateAnswerFirebase,
+	deleteAnswerFirebase,
 	upvoteAnswer,
 	deUpvoteAnswer,
 }

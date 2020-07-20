@@ -20,6 +20,11 @@ const answerReducer = (state = initialAnswerState, action) => {
 				return copiedAnswers
 			}
 			return state
+		case AnswerActionTypes.REMOVE_ANSWER:
+			const copiedState = [...state].filter(
+				answer => answer.id !== action.payload
+			)
+			return copiedState
 		default:
 			return state
 	}

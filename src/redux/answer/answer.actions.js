@@ -3,6 +3,8 @@ import AnswerActionTypes from './answer.types'
 import {
 	fetchAnswers,
 	postAnswer,
+	updateAnswerFirebase,
+	deleteAnswerFirebase,
 	upvoteAnswer,
 	deUpvoteAnswer,
 } from '../../firebase.utils'
@@ -26,6 +28,11 @@ const updateAnswer = answer => ({
 	payload: answer,
 })
 
+const removeAnswer = answerId => ({
+	type: AnswerActionTypes.REMOVE_ANSWER,
+	payload: answerId,
+})
+
 // thunks
 
 const fetchAndUpdateAnswers = questionId => async dispatch => {
@@ -37,6 +44,24 @@ const postAndUpdateAnswer = answer => async dispatch => {
 	const answerDoc = await postAnswer(answer)
 	if (answerDoc) {
 		dispatch(addAnswer(answerDoc))
+	}
+}
+
+const updateAnswerAsync = answer => async dispatch => {
+	try {
+		const updatedAnswer = await updateAnswerFirebase(answer)
+		dispatch(updateAnswer(updatedAnswer))
+	} catch (err) {
+		console.log(err)
+	}
+}
+
+const deleteAnswerAsync = answerId => async dispatch => {
+	try {
+		await deleteAnswerFirebase(answerId)
+		dispatch(removeAnswer(answerId))
+	} catch (err) {
+		console.log(err)
 	}
 }
 
@@ -59,9 +84,12 @@ export {
 	unsetAnswers,
 	addAnswer,
 	updateAnswer,
+	removeAnswer,
 	// thunks
 	fetchAndUpdateAnswers,
 	postAndUpdateAnswer,
+	updateAnswerAsync,
+	deleteAnswerAsync,
 	upvoteAndUpdateAnswer,
 	deUpvoteAndUpdateAnswer,
 }
