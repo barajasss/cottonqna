@@ -22,9 +22,15 @@ const checkActiveLink = url => (match, location) => {
 
 class Header extends React.Component {
 	render() {
-		const { isLoggedIn, isLoading } = this.props
+		const { isLoggedIn, isLoading, location } = this.props
 		return (
 			<header>
+				{location.pathname === '/' && (
+					<div className='card p-4 mb-3 text-center'>
+						<h3 className=''>Cotton Q & A</h3>
+						<small>online community for cottonians</small>
+					</div>
+				)}
 				{!isLoggedIn ? <Login /> : ''}
 				{isLoading ? <Loader /> : ''}
 				<nav>

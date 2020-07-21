@@ -15,6 +15,7 @@ class QuestionPage extends React.Component {
 		this.state = {
 			questionExists: true,
 			displayAnswerForm: false,
+			fetchedQuestion: false,
 		}
 	}
 	toggleAnswerForm = () => {
@@ -46,13 +47,15 @@ class QuestionPage extends React.Component {
 				questionExists: true,
 			})
 		}
+		this.setState({ fetchedQuestion: true })
 	}
 	render() {
 		const { question } = this.props
-		const { questionExists } = this.state
+		const { questionExists, fetchedQuestion } = this.state
 
 		return (
 			<div>
+				{!fetchedQuestion && <h5>Loading question...</h5>}
 				{questionExists ? (
 					question ? (
 						<div>
