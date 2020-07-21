@@ -21,7 +21,7 @@ class MenuPage extends React.Component {
 				</Helmet>
 				<div className='list-group'>
 					<Link
-						to='/'
+						to='/about'
 						className='list-group-item list-group-item-action list-group-item-light'>
 						<i className='fas fa-info-circle'></i> About Cotton Q &
 						A
@@ -29,8 +29,8 @@ class MenuPage extends React.Component {
 					<Link
 						to='/'
 						className='list-group-item list-group-item-action list-group-item-light'>
-						<i className='fas fa-info-circle'></i> Terms and
-						Conditions
+						<i className='fas fa-info-circle'></i> Guidelines and
+						Usage
 					</Link>
 				</div>
 				<br />

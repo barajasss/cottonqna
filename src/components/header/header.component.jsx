@@ -25,10 +25,11 @@ class Header extends React.Component {
 		const { isLoggedIn, isLoading, location } = this.props
 		return (
 			<header>
-				{location.pathname === '/' && (
+				{(location.pathname === '/' ||
+					location.pathname === '/about') && (
 					<div className='card p-4 mb-3 text-center'>
-						<h3 className=''>Cotton Q & A</h3>
-						<small>online community for cottonians</small>
+						<h3 className=''>কটন Q & A</h3>
+						<small>an online community for cottonians</small>
 					</div>
 				)}
 				{!isLoggedIn ? <Login /> : ''}

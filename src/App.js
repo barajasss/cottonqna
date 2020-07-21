@@ -10,6 +10,7 @@ import QuestionPage from './pages/question/question.component'
 import MyQuestionPage from './pages/myquestion/myquestion.component'
 import MyAnswerPage from './pages/myanswer/myanswer.component'
 import SearchPage from './pages/search/search.component'
+import AboutPage from './pages/about/about.component'
 
 import Page404 from './pages/404/404.component'
 
@@ -68,6 +69,7 @@ class App extends React.Component {
 						component={SearchPage}
 					/>
 					<Route exact path='/search' component={SearchPage} />
+					<Route exact path='/about' component={AboutPage} />
 					<Route exact component={Page404} />
 				</Switch>
 			</div>
