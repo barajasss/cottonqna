@@ -28,7 +28,7 @@ class Header extends React.Component {
 				{(location.pathname === '/' ||
 					location.pathname === '/about' ||
 					location.pathname === '/guidelines') && (
-					<div className='card p-4 mb-3 text-center'>
+					<div className='card p-4 mb-3 text-center brand-display'>
 						<h3 className=''>কটন Q & A</h3>
 						<small>an online community for cottonians</small>
 					</div>

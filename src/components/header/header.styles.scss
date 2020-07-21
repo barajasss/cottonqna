@@ -2,6 +2,7 @@ header {
 	margin: 0;
 	padding: 0;
 	nav {
+		box-shadow: 1px 1px 9px 1px #aaa;
 		position: fixed;
 		z-index: 100;
 		width: 100%;
@@ -48,6 +49,10 @@ header {
 			}
 		}
 	}
+}
+
+.brand-display {
+	box-shadow: 1px 1px 5px 1px #ddd;
 }
 
 @media screen and (min-width: 720px) {

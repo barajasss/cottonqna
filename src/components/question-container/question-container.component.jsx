@@ -46,12 +46,17 @@ class QuestionContainer extends React.Component {
 					<h5>
 						{questions.length} search{' '}
 						{questions.length === 1 ? 'result' : 'results'} for{' '}
-						<small>"{match.params.searchText}"</small>
+						<small>
+							"{decodeURIComponent(match.params.searchText)}"
+						</small>
 					</h5>
 				)}
 				{!questionsFetched && type === 'search' && (
 					<h5>
-						Searching for <small>"{match.params.searchText}"</small>
+						Searching for{' '}
+						<small>
+							"{decodeURIComponent(match.params.searchText)}"
+						</small>
 					</h5>
 				)}
 				{questions.map(questionDoc => (

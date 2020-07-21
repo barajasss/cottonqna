@@ -1,6 +1,5 @@
 import { firebase } from '../../firebase.utils'
 import UserActionTypes from './user.types'
-import { setLoading, unsetLoading } from '../loader/loader.actions'
 
 const setUser = user => ({
 	type: UserActionTypes.SET_USER,

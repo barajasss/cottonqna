@@ -146,6 +146,7 @@ class EditQuestion extends React.Component {
 										<option value='official'>
 											Official
 										</option>
+										<option value='all'>All</option>
 										<option value='other'>Other</option>
 									</select>
 								</div>
@@ -164,6 +165,7 @@ class EditQuestion extends React.Component {
 										<option value='science'>Science</option>
 
 										<option value='arts'>Arts</option>
+										<option value='all'>All</option>
 										<option value='other'>Other</option>
 									</select>
 								</div>
