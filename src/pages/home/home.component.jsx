@@ -12,11 +12,6 @@ const loggedInView = isLoading => (
 			<i className='fas fa-plus-circle' />
 			Post a Question
 		</Link>
-
-		<SearchInput />
-		<div>
-			<QuestionContainer />
-		</div>
 	</div>
 )
 class HomePage extends React.Component {
@@ -28,6 +23,10 @@ class HomePage extends React.Component {
 					<title>Home - Cotton Q & A</title>
 				</Helmet>
 				{isLoggedIn && loggedInView(isLoading)}
+				<SearchInput />
+				<div>
+					<QuestionContainer />
+				</div>
 			</div>
 		)
 	}
