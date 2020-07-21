@@ -1,9 +1,3 @@
-.user-icon {
-	width: 30px;
-	height: 30px;
-	border-radius: 50%;
-	margin-right: 5px;
-}
 .question {
 	button,
 	button:focus,
@@ -31,9 +25,4 @@ small.upvoted:focus {
 	filter: grayscale(0);
 	opacity: 1;
 	font-weight: bolder;
-}
-
-.date-display {
-	padding-top: 5px;
-	font-size: 0.7rem;
 }

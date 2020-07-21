@@ -79,6 +79,9 @@ class Question extends React.Component {
 					</Link>
 				</p>
 				<div className={expanded ? 'm-0 mt-2' : 'm-0'}>
+					<p className='m-0 date-display'>
+						{new Date(createdAt).toDateString()}
+					</p>
 					{expanded ? (
 						<h5 className='font-weight-bold'>{question}</h5>
 					) : (
@@ -88,9 +91,6 @@ class Question extends React.Component {
 							{question}
 						</Link>
 					)}
-					<p className='m-0 date-display'>
-						{new Date(createdAt).toDateString()}
-					</p>
 				</div>
 
 				{expanded ? (

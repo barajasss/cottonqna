@@ -52,6 +52,7 @@ class Answer extends React.Component {
 			answer,
 			upvotes,
 			isLoggedIn,
+			createdAt,
 			user,
 			embedded,
 		} = this.props
@@ -67,6 +68,9 @@ class Answer extends React.Component {
 					<Link to={`/profile/${uid}`}>
 						<small>{displayName}</small>
 					</Link>
+				</p>
+				<p className='m-0 date-display'>
+					{new Date(createdAt).toDateString()}
 				</p>
 				<p className='m-0'>
 					{embedded && answer.length > 100
