@@ -22,11 +22,11 @@ const checkActiveLink = url => (match, location) => {
 
 class Header extends React.Component {
 	render() {
-		const { isLoggedIn } = this.props
+		const { isLoggedIn, isLoading } = this.props
 		return (
 			<header>
 				{!isLoggedIn ? <Login /> : ''}
-				<Loader />
+				{isLoading ? <Loader /> : ''}
 				<nav>
 					<ul className='row no-gutters'>
 						<li className='col-5'>
@@ -60,8 +60,9 @@ class Header extends React.Component {
 	}
 }
 
-const mapStateToProps = ({ user }) => ({
+const mapStateToProps = ({ user, isLoading }) => ({
 	isLoggedIn: user.isLoggedIn,
+	isLoading,
 })
 
 export default connect(mapStateToProps)(withRouter(Header))

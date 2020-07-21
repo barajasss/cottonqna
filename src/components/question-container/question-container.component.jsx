@@ -11,18 +11,35 @@ import Question from '../question/question.component'
 import { connect } from 'react-redux'
 
 class QuestionContainer extends React.Component {
-	componentDidMount() {
-		const { fetchQuestionsAndUpdate } = this.props
-		fetchQuestionsAndUpdate()
+	constructor() {
+		super()
+		this.state = {
+			questionsExist: true,
+		}
+	}
+	componentDidMount = async () => {
+		const { fetchAndUpdateQuestions } = this.props
+		await fetchAndUpdateQuestions()
+		const { questions } = this.props
+		if (questions.length === 0) {
+			this.setState({
+				questionsExist: false,
+			})
+		} else {
+			this.setState({
+				questionsExist: true,
+			})
+		}
 	}
 	render() {
 		const { questions } = this.props
+		const { questionsExist } = this.state
 		return (
 			<div className='mt-4'>
 				{questions.map(questionDoc => (
 					<Question key={questionDoc.id} {...questionDoc} />
 				))}
-				{questions.length === 0 ? <h4>No questions found</h4> : ''}
+				{!questionsExist && <h4>No questions found</h4>}
 			</div>
 		)
 	}
@@ -33,8 +50,8 @@ const mapStateToProps = ({ questions }) => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	fetchQuestionsAndUpdate: () => dispatch(fetchAndUpdateQuestions()),
-	fetchNextQuestionsAndUpdate: () => dispatch(fetchNextAndUpdateQuestions()),
+	fetchAndUpdateQuestions: () => dispatch(fetchAndUpdateQuestions()),
+	fetchNextAndUpdateQuestions: () => dispatch(fetchNextAndUpdateQuestions()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionContainer)

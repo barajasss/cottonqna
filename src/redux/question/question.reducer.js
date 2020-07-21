@@ -6,6 +6,8 @@ const questionReducer = (state = initialQuestionState, action) => {
 	switch (action.type) {
 		case QuestionActionTypes.SET_QUESTIONS:
 			return [...action.payload]
+		case QuestionActionTypes.UNSET_QUESTIONS:
+			return initialQuestionState
 		case QuestionActionTypes.APPEND_QUESTIONS:
 			return [...state, ...action.payload]
 		case QuestionActionTypes.UPDATE_QUESTION:

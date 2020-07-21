@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Redirect, withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
-import { postQuestion } from '../../firebase.utils'
+import { postQuestionAsync } from '../../redux/question/question.actions'
 
 import './post-question.styles.scss'
 
@@ -17,16 +17,17 @@ class PostQuestionPage extends React.Component {
 		}
 	}
 	handleSubmit = async e => {
+		e.preventDefault()
 		const {
 			user: { uid, displayName, photoURL },
 			history,
+			postQuestionAsync,
 		} = this.props
 		let { question, category, discipline } = this.state
-		e.preventDefault()
 		if (question[question.length - 1] !== '?') {
 			question = `${question}?`
 		}
-		await postQuestion({
+		await postQuestionAsync({
 			uid,
 			displayName,
 			photoURL,
@@ -34,7 +35,7 @@ class PostQuestionPage extends React.Component {
 			category,
 			discipline,
 		})
-		// error handler goes here
+
 		history.push('/')
 	}
 	handleChange = e => {
@@ -130,4 +131,11 @@ const mapStateToProps = ({ user }) => ({
 	isLoggedIn: user.isLoggedIn,
 })
 
-export default connect(mapStateToProps)(withRouter(PostQuestionPage))
+const mapDispatchToProps = dispatch => ({
+	postQuestionAsync: question => dispatch(postQuestionAsync(question)),
+})
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withRouter(PostQuestionPage))

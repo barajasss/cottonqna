@@ -17,12 +17,16 @@ import Header from './components/header/header.component'
 import { connect } from 'react-redux'
 import { firebase } from './firebase.utils'
 import { updateUser } from './redux/user/user.actions'
+import { setLoading, unsetLoading } from './redux/loader/loader.actions'
 
 class App extends React.Component {
 	componentDidMount() {
-		firebase.auth().onAuthStateChanged(user => {
-			this.props.updateUser(user)
+		const { setLoading, unsetLoading, updateUser } = this.props
+		setLoading()
+		firebase.auth().onAuthStateChanged(async user => {
+			await updateUser(user)
 			console.log(user)
+			unsetLoading()
 		})
 	}
 	render() {
@@ -63,6 +67,8 @@ class App extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
 	updateUser: user => dispatch(updateUser(user)),
+	setLoading: () => dispatch(setLoading()),
+	unsetLoading: () => dispatch(unsetLoading()),
 })
 
 export default connect(null, mapDispatchToProps)(App)
