@@ -11,18 +11,28 @@ import EditAnswer from '../../components/edit-answer/edit-answer.component'
 import { fetchByUidAndUpdateAnswers } from '../../redux/answer/answer.actions'
 
 class MyAnswerPage extends React.Component {
-	componentDidMount = async () => {
+	constructor() {
+		super()
+		this.state = {
+			answersFetched: false,
+		}
+	}
+	async componentDidMount() {
 		const {
 			fetchByUidAndUpdateAnswers,
 			user: { uid },
 		} = this.props
 		await fetchByUidAndUpdateAnswers(uid)
+		this.setState({
+			answersFetched: true,
+		})
 	}
 	render() {
 		const {
 			answers,
 			user: { isLoggedIn },
 		} = this.props
+		const { answersFetched } = this.state
 		return (
 			<div>
 				<Helmet>
@@ -36,6 +46,11 @@ class MyAnswerPage extends React.Component {
 						<EditAnswer {...answer} />
 					</div>
 				))}
+
+				{!answersFetched && <h5>Loading your answers...</h5>}
+				{answersFetched && answers.length === 0 && (
+					<h5>No answers found</h5>
+				)}
 			</div>
 		)
 	}

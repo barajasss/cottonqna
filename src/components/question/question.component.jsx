@@ -139,7 +139,7 @@ class Question extends React.Component {
 
 				{expanded && isLoggedIn ? (
 					<button
-						className='btn btn-link pr-0 border-left'
+						className='btn btn-link pr-0'
 						onClick={toggleAnswerForm}>
 						<small>
 							<i className='fas fa-pen' />

@@ -14,6 +14,7 @@ class ProfilePage extends React.Component {
 		photoURL: '',
 		isLoggedIn: false,
 		userNotFound: false,
+		fetchedProfile: false,
 	}
 	async componentDidMount() {
 		const { match } = this.props
@@ -48,6 +49,9 @@ class ProfilePage extends React.Component {
 				})
 			})
 		}
+		this.setState({
+			fetchedProfile: true,
+		})
 	}
 	render() {
 		const {
@@ -56,12 +60,14 @@ class ProfilePage extends React.Component {
 			photoURL,
 			isLoggedIn,
 			userNotFound,
+			fetchedProfile,
 		} = this.state
 		return (
 			<div className='profile'>
 				<Helmet>
 					<title>User Profile</title>
 				</Helmet>
+				{!fetchedProfile && <h5>Loading Profile...</h5>}
 				{displayName && photoURL && email ? (
 					<div>
 						<img

@@ -11,18 +11,28 @@ import EditQuestion from '../../components/edit-question/edit-question.component
 import { fetchByUidAndUpdateQuestions } from '../../redux/question/question.actions'
 
 class MyQuestionPage extends React.Component {
-	componentDidMount = async () => {
+	constructor() {
+		super()
+		this.state = {
+			questionsFetched: false,
+		}
+	}
+	async componentDidMount() {
 		const {
 			fetchByUidAndUpdateQuestions,
 			user: { uid },
 		} = this.props
 		await fetchByUidAndUpdateQuestions(uid)
+		this.setState({
+			questionsFetched: true,
+		})
 	}
 	render() {
 		const {
 			questions,
 			user: { isLoggedIn },
 		} = this.props
+		const { questionsFetched } = this.state
 		return (
 			<div>
 				<Helmet>
@@ -36,6 +46,11 @@ class MyQuestionPage extends React.Component {
 						<EditQuestion {...question} />
 					</div>
 				))}
+
+				{!questionsFetched && <h5>Loading your questions...</h5>}
+				{questionsFetched && questions.length === 0 && (
+					<h5>No questions found</h5>
+				)}
 			</div>
 		)
 	}

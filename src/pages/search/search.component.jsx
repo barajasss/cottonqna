@@ -1,0 +1,53 @@
+import React from 'react'
+import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
+import SearchInput from '../../components/search-input/search-input.component'
+import QuestionContainer from '../../components/question-container/question-container.component'
+
+import { connect } from 'react-redux'
+
+const loggedInView = isLoading => (
+	<div>
+		<Link to='/post-question' className='btn btn-block btn-primary'>
+			<i className='fas fa-plus-circle' />
+			Post a Question
+		</Link>
+	</div>
+)
+class SearchPage extends React.Component {
+	componentDidMount() {
+		const { history, match } = this.props
+		console.log(match.params.searchText)
+		if (!match.params.searchText) {
+			history.push('/')
+		}
+	}
+	render() {
+		const {
+			isLoggedIn,
+			isLoading,
+			match: {
+				params: { searchText },
+			},
+		} = this.props
+		return (
+			<div>
+				<Helmet>
+					<title>Search Results - Cotton Q & A</title>
+				</Helmet>
+				{isLoggedIn && loggedInView(isLoading)}
+				<SearchInput />
+				<div>
+					<QuestionContainer key={searchText} type='search' />
+				</div>
+			</div>
+		)
+	}
+}
+
+const mapStateToProps = ({ user, isLoading }) => ({
+	isLoggedIn: user.isLoggedIn,
+	isLoading,
+})
+
+export default connect(mapStateToProps)(SearchPage)

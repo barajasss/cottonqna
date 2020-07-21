@@ -9,6 +9,7 @@ import PostQuestionPage from './pages/post-question/post-question.component'
 import QuestionPage from './pages/question/question.component'
 import MyQuestionPage from './pages/myquestion/myquestion.component'
 import MyAnswerPage from './pages/myanswer/myanswer.component'
+import SearchPage from './pages/search/search.component'
 
 import Page404 from './pages/404/404.component'
 
@@ -23,11 +24,14 @@ class App extends React.Component {
 	componentDidMount() {
 		const { setLoading, unsetLoading, updateUser } = this.props
 		setLoading()
-		firebase.auth().onAuthStateChanged(async user => {
+		this.unsubscribe = firebase.auth().onAuthStateChanged(async user => {
 			await updateUser(user)
 			console.log(user)
 			unsetLoading()
 		})
+	}
+	componentWillUnmount() {
+		this.unsubscribe()
 	}
 	render() {
 		return (
@@ -58,6 +62,12 @@ class App extends React.Component {
 						path='/menu/myanswers'
 						component={MyAnswerPage}
 					/>
+					<Route
+						exact
+						path='/search/:searchText'
+						component={SearchPage}
+					/>
+					<Route exact path='/search' component={SearchPage} />
 					<Route exact component={Page404} />
 				</Switch>
 			</div>

@@ -1,8 +1,7 @@
 import React from 'react'
 import './search-input.styles.scss'
 
-import { connect } from 'react-redux'
-import { searchAndUpdateQuestions } from '../../redux/question/question.actions'
+import { withRouter } from 'react-router-dom'
 
 class SearchInput extends React.Component {
 	constructor() {
@@ -18,9 +17,15 @@ class SearchInput extends React.Component {
 	}
 	handleSubmit = async e => {
 		e.preventDefault()
-		const { searchAndUpdateQuestions } = this.props
+		const { history } = this.props
 		const { searchText } = this.state
-		await searchAndUpdateQuestions(searchText)
+		this.setState({
+			searchText: '',
+		})
+		if (searchText === '') {
+			return history.push(`/`)
+		}
+		history.push(`/search/${encodeURIComponent(searchText)}`)
 	}
 	render() {
 		const { searchText } = this.state
@@ -34,7 +39,7 @@ class SearchInput extends React.Component {
 							name='searchText'
 							value={searchText}
 							onChange={this.handleChange}
-							placeholder='search your question'
+							placeholder='search your question here'
 						/>
 						<div className='input-group-append'>
 							<button className='btn btn-primary' type='submit'>
@@ -48,9 +53,4 @@ class SearchInput extends React.Component {
 	}
 }
 
-const mapDispatchToProps = dispatch => ({
-	searchAndUpdateQuestions: searchTags =>
-		dispatch(searchAndUpdateQuestions(searchTags)),
-})
-
-export default connect(null, mapDispatchToProps)(SearchInput)
+export default withRouter(SearchInput)

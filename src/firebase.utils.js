@@ -109,7 +109,7 @@ const fetchQuestion = async questionId => {
 	}
 }
 
-const searchQuestions = async (searchTerm, start = 0) => {
+const searchQuestions = async (searchTerm = '', start = 0) => {
 	const questions = []
 	try {
 		let questionsRef = firebase
