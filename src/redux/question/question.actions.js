@@ -3,6 +3,7 @@ import { setLoading, unsetLoading } from '../loader/loader.actions'
 
 import {
 	fetchQuestion,
+	searchQuestions,
 	fetchQuestions,
 	fetchQuestionsByUid,
 	postQuestion,
@@ -84,6 +85,14 @@ const deUpvoteAndUpdateQuestion = (uid, questionId) => async dispatch => {
 	dispatch(unsetLoading())
 }
 
+const searchAndUpdateQuestions = searchTags => async dispatch => {
+	dispatch(setLoading())
+	dispatch(unsetQuestions())
+	const questions = await searchQuestions(searchTags)
+	dispatch(setQuestions(questions))
+	dispatch(unsetLoading())
+}
+
 const fetchAndUpdateQuestion = questionId => async dispatch => {
 	dispatch(setLoading())
 	dispatch(unsetQuestions())
@@ -131,6 +140,7 @@ export {
 	deleteQuestionAsync,
 	upvoteAndUpdateQuestion,
 	deUpvoteAndUpdateQuestion,
+	searchAndUpdateQuestions,
 	fetchAndUpdateQuestion,
 	fetchAndUpdateQuestions,
 	fetchByUidAndUpdateQuestions,

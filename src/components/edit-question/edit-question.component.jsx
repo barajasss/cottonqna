@@ -7,6 +7,8 @@ import {
 	deleteQuestionAsync,
 } from '../../redux/question/question.actions'
 
+import { createTags } from '../../utils'
+
 class EditQuestion extends React.Component {
 	constructor(props) {
 		super(props)
@@ -38,11 +40,13 @@ class EditQuestion extends React.Component {
 		if (question[question.length - 1] !== '?') {
 			question = `${question}?`
 		}
+		const tags = createTags(question)
 		await updateQuestionAsync({
 			id,
 			question,
 			category,
 			discipline,
+			tags,
 		})
 		this.setState(state => ({
 			displayEditForm: false,

@@ -20,7 +20,7 @@ const googleSignIn = () => {
 		.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 		.then(() => {
 			const provider = new firebase.auth.GoogleAuthProvider()
-			return firebase.auth().signInWithRedirect(provider)
+			return firebase.auth().signInWithPopup(provider)
 		})
 		.catch(err => {
 			console.log(err)
@@ -56,6 +56,7 @@ const postQuestion = async ({
 	question,
 	category,
 	discipline,
+	tags,
 }) => {
 	await firebase.firestore().collection('questions').add({
 		uid,
@@ -64,6 +65,7 @@ const postQuestion = async ({
 		question,
 		category,
 		discipline,
+		tags,
 		createdAt: Date.now(),
 	})
 }
@@ -104,6 +106,71 @@ const fetchQuestion = async questionId => {
 	} catch (err) {
 		console.log(err)
 		return null
+	}
+}
+
+const searchQuestions = async (searchTerm, start = 0) => {
+	const questions = []
+	try {
+		let questionsRef = firebase
+			.firestore()
+			.collection('questions')
+			.orderBy('createdAt', 'asc')
+		if (searchTerm.length !== 0) {
+			questionsRef = questionsRef
+				.where('tags', 'array-contains', searchTerm)
+				.startAfter(start)
+				.limit(10)
+		} else {
+			questionsRef = questionsRef.startAfter(start).limit(10)
+		}
+		let questionsCollection = await questionsRef.get()
+		await Promise.all(
+			questionsCollection.docs.map(async questionDoc => {
+				let upvotes = await firebase
+					.firestore()
+					.collection(`/questions/${questionDoc.id}/upvotes`)
+					.get()
+				let answers = await firebase
+					.firestore()
+					.collection('answers')
+					.where('questionId', '==', questionDoc.id)
+					.get()
+				if (upvotes.empty) {
+					upvotes = []
+				} else {
+					upvotes = upvotes.docs
+				}
+				const question = {
+					id: questionDoc.id,
+					...questionDoc.data(),
+					upvotes,
+					firstAnswer: null,
+					answerCount: answers.docs.length,
+				}
+				if (!answers.empty) {
+					let firstAnswerUpvotes = await firebase
+						.firestore()
+						.collection(`/answers/${answers.docs[0].id}/upvotes`)
+						.get()
+					if (firstAnswerUpvotes.empty) {
+						firstAnswerUpvotes = []
+					} else {
+						firstAnswerUpvotes = firstAnswerUpvotes.docs
+					}
+					question.firstAnswer = {
+						id: answers.docs[0].id,
+						...answers.docs[0].data(),
+						upvotes: firstAnswerUpvotes,
+					}
+				}
+				questions.push(question)
+			})
+		)
+		return questions
+	} catch (err) {
+		console.log(err)
+		return []
 	}
 }
 
@@ -215,13 +282,14 @@ const updateQuestionFirebase = async ({
 	question,
 	category,
 	discipline,
+	tags,
 }) => {
 	try {
 		await firebase
 			.firestore()
 			.collection('questions')
 			.doc(id)
-			.set({ question, category, discipline }, { merge: true })
+			.set({ question, category, discipline, tags }, { merge: true })
 		const questionDoc = await firebase
 			.firestore()
 			.doc(`/questions/${id}`)
@@ -596,6 +664,7 @@ export {
 	// question controllers
 	postQuestion,
 	fetchQuestions,
+	searchQuestions,
 	fetchQuestionsByUid,
 	fetchQuestion,
 	updateQuestionFirebase,

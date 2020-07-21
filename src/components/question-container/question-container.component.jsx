@@ -14,39 +14,35 @@ class QuestionContainer extends React.Component {
 	constructor() {
 		super()
 		this.state = {
-			questionsExist: true,
+			questionsFetched: false,
 		}
 	}
 	componentDidMount = async () => {
 		const { fetchAndUpdateQuestions } = this.props
 		await fetchAndUpdateQuestions()
-		const { questions } = this.props
-		if (questions.length === 0) {
-			this.setState({
-				questionsExist: false,
-			})
-		} else {
-			this.setState({
-				questionsExist: true,
-			})
-		}
+		this.setState({
+			questionsFetched: true,
+		})
 	}
 	render() {
 		const { questions } = this.props
-		const { questionsExist } = this.state
+		const { questionsFetched } = this.state
 		return (
 			<div className='mt-4'>
 				{questions.map(questionDoc => (
 					<Question key={questionDoc.id} {...questionDoc} />
 				))}
-				{!questionsExist && <h4>No questions found</h4>}
+				{questionsFetched && questions.length === 0 && (
+					<h4>Questions not found</h4>
+				)}
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ questions }) => ({
+const mapStateToProps = ({ questions, isLoading }) => ({
 	questions,
+	isLoading,
 })
 
 const mapDispatchToProps = dispatch => ({

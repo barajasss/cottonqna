@@ -4,6 +4,7 @@ import { Redirect, withRouter } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
 import { postQuestionAsync } from '../../redux/question/question.actions'
+import { createTags } from '../../utils'
 
 import './post-question.styles.scss'
 
@@ -27,6 +28,8 @@ class PostQuestionPage extends React.Component {
 		if (question[question.length - 1] !== '?') {
 			question = `${question}?`
 		}
+		const tags = createTags(question)
+		console.log(tags)
 		await postQuestionAsync({
 			uid,
 			displayName,
@@ -34,6 +37,7 @@ class PostQuestionPage extends React.Component {
 			question,
 			category,
 			discipline,
+			tags,
 		})
 
 		history.push('/')
@@ -74,13 +78,13 @@ class PostQuestionPage extends React.Component {
 						className='form-control mb-3'
 						rows='5'
 						placeholder='Ask any question related to academics or cotton university.'
-						maxLength={500}
+						maxLength={110}
 						name='question'
 						onChange={this.handleChange}
 						defaultValue={question}
 						required
 					/>
-					<p>{question.length} / 500</p>
+					<p>{question.length} / 110</p>
 					<div className='row'>
 						<div className='col'>
 							<div className='form-group'>
@@ -96,6 +100,7 @@ class PostQuestionPage extends React.Component {
 									<option value='cultural'>Cultural</option>
 									<option value='sports'>Sports</option>
 									<option value='official'>Official</option>
+									<option value='all'>All</option>
 									<option value='other'>Other</option>
 								</select>
 							</div>
@@ -112,6 +117,7 @@ class PostQuestionPage extends React.Component {
 									<option value='science'>Science</option>
 
 									<option value='arts'>Arts</option>
+									<option value='all'>All</option>
 									<option value='other'>Other</option>
 								</select>
 							</div>

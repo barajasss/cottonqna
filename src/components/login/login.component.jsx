@@ -12,10 +12,10 @@ class Login extends React.Component {
 				{!isLoading && (
 					<div className='login card bg-info p-3'>
 						<p className='p-0'>
-							<i className='fas fa-info-circle'></i> To view
-							profile, options and ask or answer questions, click
-							continue with google. If you are a cottonian, please
-							volunteer and help others.
+							<i className='fas fa-info-circle'></i> Dear
+							cottonians and other students, please click continue
+							with google to view profile, and ask or answer
+							questions,
 						</p>
 						<button
 							className='btn btn-block btn-light'
