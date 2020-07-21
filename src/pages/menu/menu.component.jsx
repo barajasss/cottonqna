@@ -27,7 +27,7 @@ class MenuPage extends React.Component {
 						A
 					</Link>
 					<Link
-						to='/'
+						to='/guidelines'
 						className='list-group-item list-group-item-action list-group-item-light'>
 						<i className='fas fa-info-circle'></i> Guidelines and
 						Usage

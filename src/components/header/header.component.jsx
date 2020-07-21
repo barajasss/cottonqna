@@ -26,7 +26,8 @@ class Header extends React.Component {
 		return (
 			<header>
 				{(location.pathname === '/' ||
-					location.pathname === '/about') && (
+					location.pathname === '/about' ||
+					location.pathname === '/guidelines') && (
 					<div className='card p-4 mb-3 text-center'>
 						<h3 className=''>কটন Q & A</h3>
 						<small>an online community for cottonians</small>

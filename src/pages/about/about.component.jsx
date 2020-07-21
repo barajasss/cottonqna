@@ -7,12 +7,13 @@ class AboutPage extends React.Component {
 		return (
 			<div>
 				<p>
-					Cotton Q & A is a site where you can ask questions and find
-					aswers from other students related to Cotton University.
+					Cotton Q & A is a site created for good people like you,
+					where you can ask questions and find aswers from other
+					students related to Cotton University.
 				</p>
 				<p>
-					It was designed to help students find their doubts and
-					answers all in one place.
+					It was designed to help students resolve their doubts and
+					questions all in one place.
 				</p>
 				<div>
 					<h5>Founder:</h5>
@@ -69,9 +70,9 @@ class AboutPage extends React.Component {
 						</p>
 					</div>
 					<p>
-						UPI ID: <h5>barajaswargiary4444@okicici</h5>
+						UPI ID: <b>barajaswargiary4444@okicici</b>
 						<br />
-						Paytm Wallet: <h5>8472901882</h5>
+						Paytm Wallet: <b>8472901882</b>
 					</p>
 				</div>
 			</div>
