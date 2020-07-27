@@ -29,7 +29,6 @@ class PostQuestionPage extends React.Component {
 			question = `${question}?`
 		}
 		const tags = createTags(question)
-		console.log(tags)
 		await postQuestionAsync({
 			uid,
 			displayName,

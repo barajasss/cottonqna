@@ -49,6 +49,87 @@ const fetchUserById = async uid => {
 
 ////////////////////////////
 
+//
+// UTILS
+//
+
+const getDocStartAt = async (collection, start = 0, limit = 5) => {
+	const totalDocs = (await firebase.firestore().collection(collection).get())
+		.docs.length
+	let allLoaded = false
+	let newVisible, first
+	if (start === 0) {
+		newVisible = (
+			await firebase
+				.firestore()
+				.collection(collection)
+				.orderBy('createdAt', 'desc')
+				.limit(1)
+				.get()
+		).docs[0]
+	} else {
+		first = await firebase
+			.firestore()
+			.collection(collection)
+			.orderBy('createdAt', 'desc')
+			.limit(start + 1)
+			.get()
+		newVisible = first.docs[first.docs.length - 1]
+	}
+	if ((first && first.docs.length === totalDocs) || totalDocs <= limit) {
+		allLoaded = true
+	}
+	return [newVisible, allLoaded]
+}
+
+const questionWithAnswersAndUpvotes = async (
+	questionDoc,
+	getFirstAnswer = false
+) => {
+	if (!questionDoc.exists) {
+		return null
+	}
+	let answers = await firebase
+		.firestore()
+		.collection('answers')
+		.where('questionId', '==', questionDoc.id)
+		.get()
+	let upvotesCollection = await firebase
+		.firestore()
+		.collection(`/questions/${questionDoc.id}/upvotes`)
+		.get()
+	if (upvotesCollection.empty) {
+		upvotesCollection = []
+	} else {
+		upvotesCollection = upvotesCollection.docs
+	}
+	const question = {
+		id: questionDoc.id,
+		...questionDoc.data(),
+		upvotes: upvotesCollection,
+		firstAnswer: null,
+		answerCount: answers.docs.length,
+	}
+	if (getFirstAnswer && !answers.empty) {
+		let firstAnswerUpvotes = await firebase
+			.firestore()
+			.collection(`/answers/${answers.docs[0].id}/upvotes`)
+			.get()
+		if (firstAnswerUpvotes.empty) {
+			firstAnswerUpvotes = []
+		} else {
+			firstAnswerUpvotes = firstAnswerUpvotes.docs
+		}
+		question.firstAnswer = {
+			id: answers.docs[0].id,
+			...answers.docs[0].data(),
+			upvotes: firstAnswerUpvotes,
+		}
+	}
+	return question
+}
+// END OF UTILS //
+
 const postQuestion = async ({
 	uid,
 	displayName,
@@ -76,32 +157,7 @@ const fetchQuestion = async questionId => {
 			.firestore()
 			.doc(`/questions/${questionId}`)
 			.get()
-
-		let answers = await firebase
-			.firestore()
-			.collection('answers')
-			.where('questionId', '==', questionId)
-			.get()
-
-		let upvotesCollection = await firebase
-			.firestore()
-			.collection(`/questions/${questionId}/upvotes`)
-			.get()
-		if (upvotesCollection.empty) {
-			upvotesCollection = []
-		} else {
-			upvotesCollection = upvotesCollection.docs
-		}
-		if (!questionDoc.exists) {
-			return null
-		}
-		const question = {
-			id: questionDoc.id,
-			...questionDoc.data(),
-			upvotes: upvotesCollection,
-			firstAnswer: null,
-			answerCount: answers.docs.length,
-		}
+		const question = questionWithAnswersAndUpvotes(questionDoc)
 		return question
 	} catch (err) {
 		console.log(err)
@@ -126,43 +182,10 @@ const searchQuestions = async (searchTerm = '') => {
 		let questionsCollection = await questionsRef.get()
 		await Promise.all(
 			questionsCollection.docs.map(async questionDoc => {
-				let upvotes = await firebase
-					.firestore()
-					.collection(`/questions/${questionDoc.id}/upvotes`)
-					.get()
-				let answers = await firebase
-					.firestore()
-					.collection('answers')
-					.where('questionId', '==', questionDoc.id)
-					.get()
-				if (upvotes.empty) {
-					upvotes = []
-				} else {
-					upvotes = upvotes.docs
-				}
-				const question = {
-					id: questionDoc.id,
-					...questionDoc.data(),
-					upvotes,
-					firstAnswer: null,
-					answerCount: answers.docs.length,
-				}
-				if (!answers.empty) {
-					let firstAnswerUpvotes = await firebase
-						.firestore()
-						.collection(`/answers/${answers.docs[0].id}/upvotes`)
-						.get()
-					if (firstAnswerUpvotes.empty) {
-						firstAnswerUpvotes = []
-					} else {
-						firstAnswerUpvotes = firstAnswerUpvotes.docs
-					}
-					question.firstAnswer = {
-						id: answers.docs[0].id,
-						...answers.docs[0].data(),
-						upvotes: firstAnswerUpvotes,
-					}
-				}
+				const question = await questionWithAnswersAndUpvotes(
+					questionDoc,
+					true
+				)
 				questions.push(question)
 			})
 		)
@@ -175,32 +198,12 @@ const searchQuestions = async (searchTerm = '') => {
 
 const fetchQuestions = async (start = 0) => {
 	const questions = []
-	const totalDocs = (await firebase.firestore().collection('questions').get())
-		.docs.length
-	let allLoaded = false
-	let newVisible, first
 	const limit = 5
-	if (start === 0) {
-		newVisible = (
-			await firebase
-				.firestore()
-				.collection('questions')
-				.orderBy('createdAt', 'desc')
-				.limit(1)
-				.get()
-		).docs[0]
-	} else {
-		first = await firebase
-			.firestore()
-			.collection('questions')
-			.orderBy('createdAt', 'desc')
-			.limit(start + 1)
-			.get()
-		newVisible = first.docs[first.docs.length - 1]
-	}
-	if ((first && first.docs.length === totalDocs) || totalDocs < limit) {
-		allLoaded = true
-	}
+	const [newVisible, allLoaded] = await getDocStartAt(
+		'questions',
+		start,
+		limit
+	)
 	try {
 		const questionsRef = await firebase
 			.firestore()
@@ -211,43 +214,10 @@ const fetchQuestions = async (start = 0) => {
 			.get()
 
 		for (let questionDoc of questionsRef.docs) {
-			let upvotes = await firebase
-				.firestore()
-				.collection(`/questions/${questionDoc.id}/upvotes`)
-				.get()
-			let answers = await firebase
-				.firestore()
-				.collection('answers')
-				.where('questionId', '==', questionDoc.id)
-				.get()
-			if (upvotes.empty) {
-				upvotes = []
-			} else {
-				upvotes = upvotes.docs
-			}
-			const question = {
-				id: questionDoc.id,
-				...questionDoc.data(),
-				upvotes,
-				firstAnswer: null,
-				answerCount: answers.docs.length,
-			}
-			if (!answers.empty) {
-				let firstAnswerUpvotes = await firebase
-					.firestore()
-					.collection(`/answers/${answers.docs[0].id}/upvotes`)
-					.get()
-				if (firstAnswerUpvotes.empty) {
-					firstAnswerUpvotes = []
-				} else {
-					firstAnswerUpvotes = firstAnswerUpvotes.docs
-				}
-				question.firstAnswer = {
-					id: answers.docs[0].id,
-					...answers.docs[0].data(),
-					upvotes: firstAnswerUpvotes,
-				}
-			}
+			const question = await questionWithAnswersAndUpvotes(
+				questionDoc,
+				true
+			)
 			questions.push(question)
 		}
 		return { questions, allLoaded }
@@ -267,27 +237,7 @@ const fetchQuestionsByUid = async uid => {
 			.orderBy('createdAt', 'desc')
 			.get()
 		for (let questionDoc of questionsRef.docs) {
-			let upvotes = await firebase
-				.firestore()
-				.collection(`/questions/${questionDoc.id}/upvotes`)
-				.get()
-			let answers = await firebase
-				.firestore()
-				.collection('answers')
-				.where('questionId', '==', questionDoc.id)
-				.get()
-			if (upvotes.empty) {
-				upvotes = []
-			} else {
-				upvotes = upvotes.docs
-			}
-			const question = {
-				id: questionDoc.id,
-				...questionDoc.data(),
-				upvotes,
-				firstAnswer: null,
-				answerCount: answers.docs.length,
-			}
+			const question = await questionWithAnswersAndUpvotes(questionDoc)
 			questions.push(question)
 		}
 		return questions
@@ -318,27 +268,7 @@ const updateQuestionFirebase = async ({
 			.firestore()
 			.doc(`/questions/${id}`)
 			.get()
-		const answers = await firebase
-			.firestore()
-			.collection('answers')
-			.where('questionId', '==', id)
-			.get()
-		let upvotes = await firebase
-			.firestore()
-			.collection(`/questions/${id}/upvotes`)
-			.get()
-		if (upvotes.empty) {
-			upvotes = []
-		} else {
-			upvotes = upvotes.docs
-		}
-		const updatedQuestion = {
-			id: questionDoc.id,
-			...questionDoc.data(),
-			upvotes,
-			firstAnswer: null,
-			answerCount: answers.docs.length,
-		}
+		const updatedQuestion = await questionWithAnswersAndUpvotes(questionDoc)
 		return updatedQuestion
 	} catch (err) {
 		return null
@@ -379,7 +309,7 @@ const deleteQuestionFirebase = async questionId => {
 }
 
 const upvoteQuestion = async (uid, questionId) => {
-	if (!uid) {
+	if (!uid || !questionId) {
 		return
 	}
 	try {
@@ -394,10 +324,6 @@ const upvoteQuestion = async (uid, questionId) => {
 				},
 				{ merge: true }
 			)
-		const questionDoc = await firebase
-			.firestore()
-			.doc(`/questions/${questionId}`)
-			.get()
 		let upvotes = await firebase
 			.firestore()
 			.collection(`/questions/${questionId}/upvotes`)
@@ -408,8 +334,7 @@ const upvoteQuestion = async (uid, questionId) => {
 			upvotes = upvotes.docs
 		}
 		return {
-			id: questionDoc.id,
-			...questionDoc.data(),
+			id: questionId,
 			upvotes,
 		}
 	} catch (err) {
@@ -425,10 +350,6 @@ const deUpvoteQuestion = async (uid, questionId) => {
 			.collection(`/questions/${questionId}/upvotes`)
 			.doc(uid)
 			.delete()
-		const questionDoc = await firebase
-			.firestore()
-			.doc(`/questions/${questionId}`)
-			.get()
 		let upvotes = await firebase
 			.firestore()
 			.collection(`/questions/${questionId}/upvotes`)
@@ -440,8 +361,7 @@ const deUpvoteQuestion = async (uid, questionId) => {
 			upvotes = upvotes.docs
 		}
 		return {
-			id: questionDoc.id,
-			...questionDoc.data(),
+			id: questionId,
 			upvotes,
 		}
 	} catch (err) {
@@ -455,6 +375,28 @@ const deUpvoteQuestion = async (uid, questionId) => {
 // ANSWER CONTROLLERS
 
 ////////////////////////////////////
+
+// ANSWER UTILS //
+
+const answerWithUpvotes = async answerDoc => {
+	let upvotes = await firebase
+		.firestore()
+		.collection(`/answers/${answerDoc.id}/upvotes`)
+		.get()
+	if (upvotes.empty) {
+		upvotes = []
+	} else {
+		upvotes = upvotes.docs
+	}
+	const answer = {
+		id: answerDoc.id,
+		...answerDoc.data(),
+		upvotes,
+	}
+	return answer
+}
+
+// END OF ANSWER UITILS //
 
 const postAnswer = async ({
 	uid,
@@ -494,20 +436,7 @@ const fetchAnswers = async questionId => {
 			.get()
 		let answers = []
 		for (let answerDoc of answersRef.docs) {
-			let upvotes = await firebase
-				.firestore()
-				.collection(`/answers/${answerDoc.id}/upvotes`)
-				.get()
-			if (upvotes.empty) {
-				upvotes = []
-			} else {
-				upvotes = upvotes.docs
-			}
-			const answer = {
-				id: answerDoc.id,
-				...answerDoc.data(),
-				upvotes,
-			}
+			const answer = await answerWithUpvotes(answerDoc)
 			answers.push(answer)
 		}
 		return answers
@@ -528,20 +457,7 @@ const fetchAnswersByUid = async uid => {
 			.get()
 		await Promise.all(
 			answersRef.docs.map(async answerDoc => {
-				let upvotes = await firebase
-					.firestore()
-					.collection(`/answers/${answerDoc.id}/upvotes`)
-					.get()
-				if (upvotes.empty) {
-					upvotes = []
-				} else {
-					upvotes = upvotes.docs
-				}
-				const answer = {
-					id: answerDoc.id,
-					...answerDoc.data(),
-					upvotes,
-				}
+				const answer = await answerWithUpvotes(answerDoc)
 				answers.push(answer)
 			})
 		)
@@ -560,20 +476,7 @@ const updateAnswerFirebase = async ({ id, answer }) => {
 			.doc(id)
 			.set({ answer }, { merge: true })
 		const answerDoc = await firebase.firestore().doc(`/answers/${id}`).get()
-		let upvotes = await firebase
-			.firestore()
-			.collection(`/answers/${id}/upvotes`)
-			.get()
-		if (upvotes.empty) {
-			upvotes = []
-		} else {
-			upvotes = upvotes.docs
-		}
-		const updatedAnswer = {
-			id: answerDoc.id,
-			...answerDoc.data(),
-			upvotes,
-		}
+		const updatedAnswer = await answerWithUpvotes(answerDoc)
 		return updatedAnswer
 	} catch (err) {
 		return null
@@ -602,7 +505,7 @@ const deleteAnswerFirebase = async answerId => {
 }
 
 const upvoteAnswer = async (uid, questionId, answerId) => {
-	if (!uid) {
+	if (!uid || !questionId || !answerId) {
 		return
 	}
 	try {
@@ -618,10 +521,6 @@ const upvoteAnswer = async (uid, questionId, answerId) => {
 				},
 				{ merge: true }
 			)
-		const answerDoc = await firebase
-			.firestore()
-			.doc(`/answers/${answerId}`)
-			.get()
 		let upvotes = await firebase
 			.firestore()
 			.collection(`/answers/${answerId}/upvotes`)
@@ -632,8 +531,7 @@ const upvoteAnswer = async (uid, questionId, answerId) => {
 			upvotes = upvotes.docs
 		}
 		return {
-			id: answerDoc.id,
-			...answerDoc.data(),
+			id: answerId,
 			upvotes,
 		}
 	} catch (err) {
@@ -649,10 +547,6 @@ const deUpvoteAnswer = async (uid, answerId) => {
 			.collection(`/answers/${answerId}/upvotes`)
 			.doc(uid)
 			.delete()
-		const answerDoc = await firebase
-			.firestore()
-			.doc(`/answers/${answerId}`)
-			.get()
 		let upvotes = await firebase
 			.firestore()
 			.collection(`/answers/${answerId}/upvotes`)
@@ -664,8 +558,7 @@ const deUpvoteAnswer = async (uid, answerId) => {
 			upvotes = upvotes.docs
 		}
 		return {
-			id: answerDoc.id,
-			...answerDoc.data(),
+			id: answerId,
 			upvotes,
 		}
 	} catch (err) {

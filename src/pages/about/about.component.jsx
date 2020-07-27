@@ -47,22 +47,24 @@ class AboutPage extends React.Component {
 							projects like this.
 						</p>
 						<table className='table table-striped table-bordered'>
-							<tr>
-								<td>Member Supporter</td>
-								<td>1 - 50 rs</td>
-							</tr>
-							<tr>
-								<td>Team Supporter</td>
-								<td>50 - 200 rs</td>
-							</tr>
-							<tr>
-								<td>Project Supporter</td>
-								<td>200 - 500 rs</td>
-							</tr>
-							<tr>
-								<td>VIP Supporter</td>
-								<td>500 rs and above</td>
-							</tr>
+							<tbody>
+								<tr>
+									<td>Member Supporter</td>
+									<td>1 - 50 rs</td>
+								</tr>
+								<tr>
+									<td>Team Supporter</td>
+									<td>50 - 200 rs</td>
+								</tr>
+								<tr>
+									<td>Project Supporter</td>
+									<td>200 - 500 rs</td>
+								</tr>
+								<tr>
+									<td>VIP Supporter</td>
+									<td>500 rs and above</td>
+								</tr>
+							</tbody>
 						</table>
 						<p>
 							Project and VIP supporters will be listed on this

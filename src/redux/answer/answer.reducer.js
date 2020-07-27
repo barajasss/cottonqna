@@ -16,7 +16,10 @@ const answerReducer = (state = initialAnswerState, action) => {
 			)
 			if (answerIndex !== -1) {
 				const copiedAnswers = [...state]
-				copiedAnswers[answerIndex] = action.payload
+				copiedAnswers[answerIndex] = {
+					...copiedAnswers[answerIndex],
+					...action.payload,
+				}
 				return copiedAnswers
 			}
 			return state
