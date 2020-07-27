@@ -23,6 +23,10 @@ const appendQuestions = questions => ({
 	payload: questions,
 })
 
+const setAllLoaded = () => ({
+	type: QuestionActionTypes.SET_ALL_LOADED,
+})
+
 const updateQuestion = question => ({
 	type: QuestionActionTypes.UPDATE_QUESTION,
 	payload: question,
@@ -45,7 +49,7 @@ const postQuestionAsync = question => async dispatch => {
 	dispatch(unsetLoading())
 }
 
-const updateQuestionAsync = question => async dispatch => {
+const updateQuestionAsync = question => async (dispatch, getState) => {
 	dispatch(setLoading())
 	try {
 		const updatedQuestion = await updateQuestionFirebase(question)
@@ -93,6 +97,19 @@ const searchAndUpdateQuestions = searchTags => async dispatch => {
 	dispatch(unsetLoading())
 }
 
+const searchNextAndUpdateQuestions = searchTags => async (
+	dispatch,
+	getState
+) => {
+	dispatch(setLoading())
+	const questions = await searchQuestions(
+		searchTags,
+		getState().questions.length
+	)
+	dispatch(appendQuestions(questions))
+	dispatch(unsetLoading())
+}
+
 const fetchAndUpdateQuestion = questionId => async dispatch => {
 	dispatch(setLoading())
 	dispatch(unsetQuestions())
@@ -109,8 +126,11 @@ const fetchAndUpdateQuestion = questionId => async dispatch => {
 const fetchAndUpdateQuestions = () => async dispatch => {
 	dispatch(setLoading())
 	dispatch(unsetQuestions())
-	const questions = await fetchQuestions()
+	const { questions, allLoaded } = await fetchQuestions()
 	dispatch(setQuestions(questions))
+	if (allLoaded) {
+		dispatch(setAllLoaded())
+	}
 	dispatch(unsetLoading())
 }
 
@@ -124,8 +144,13 @@ const fetchByUidAndUpdateQuestions = uid => async dispatch => {
 
 const fetchNextAndUpdateQuestions = () => async (dispatch, getState) => {
 	dispatch(setLoading())
-	const questions = await fetchQuestions(getState().questions.length)
+	const { questions, allLoaded } = await fetchQuestions(
+		getState().questions.questions.length
+	)
 	dispatch(appendQuestions(questions))
+	if (allLoaded) {
+		dispatch(setAllLoaded())
+	}
 	dispatch(unsetLoading())
 }
 
@@ -141,6 +166,7 @@ export {
 	upvoteAndUpdateQuestion,
 	deUpvoteAndUpdateQuestion,
 	searchAndUpdateQuestions,
+	searchNextAndUpdateQuestions,
 	fetchAndUpdateQuestion,
 	fetchAndUpdateQuestions,
 	fetchByUidAndUpdateQuestions,

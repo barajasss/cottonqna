@@ -78,7 +78,10 @@ class QuestionPage extends React.Component {
 	}
 }
 
-const mapStateToProps = ({ questions }, { match: { params } }) => {
+const mapStateToProps = (
+	{ questions: { questions } },
+	{ match: { params } }
+) => {
 	return {
 		question: questions.find(question => question.id === params.questionId),
 	}

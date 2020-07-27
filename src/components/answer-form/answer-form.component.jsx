@@ -55,14 +55,14 @@ class AnswerForm extends React.Component {
 						rows={9}
 						name='answer'
 						className='form-control mt-3'
-						maxLength={2000}
+						maxLength={1000}
 						defaultValue={answer}
 						onChange={this.handleChange}
 						autoFocus
 						required
 					/>
 					<span>
-						<small>{answer.length} / 2000</small>
+						<small>{answer.length} / 1000</small>
 					</span>
 					<button
 						className='btn btn-block btn-primary my-3'

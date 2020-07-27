@@ -28,7 +28,6 @@ class App extends React.Component {
 		setLoading()
 		this.unsubscribe = firebase.auth().onAuthStateChanged(async user => {
 			await updateUser(user)
-			console.log(user)
 			unsetLoading()
 		})
 	}

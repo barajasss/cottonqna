@@ -56,7 +56,7 @@ class MyQuestionPage extends React.Component {
 	}
 }
 
-const mapStateToProps = ({ questions, user }) => ({
+const mapStateToProps = ({ questions: { questions }, user }) => ({
 	questions,
 	user,
 })

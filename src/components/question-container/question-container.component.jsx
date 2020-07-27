@@ -18,6 +18,7 @@ class QuestionContainer extends React.Component {
 			questionsFetched: false,
 		}
 	}
+
 	componentDidMount = async () => {
 		const {
 			fetchAndUpdateQuestions,
@@ -37,8 +38,15 @@ class QuestionContainer extends React.Component {
 		})
 	}
 
+	fetchNext = () => {
+		const { fetchNextAndUpdateQuestions, type } = this.props
+		if (type !== 'search') {
+			fetchNextAndUpdateQuestions()
+		}
+	}
+
 	render() {
-		const { questions, type, match } = this.props
+		const { questions, type, match, allLoaded, isLoading } = this.props
 		const { questionsFetched } = this.state
 		return (
 			<div className='mt-4'>
@@ -69,14 +77,29 @@ class QuestionContainer extends React.Component {
 				{questionsFetched &&
 					questions.length === 0 &&
 					type !== 'search' && <h5>Questions not found</h5>}
+				{!allLoaded && type !== 'search' ? (
+					<button
+						className='btn btn-primary'
+						onClick={this.fetchNext}>
+						{isLoading ? 'Loading...' : 'Load More'}
+					</button>
+				) : (
+					type !== 'search' && (
+						<h5 className='my-3'>No More Questions</h5>
+					)
+				)}
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ questions, isLoading }) => ({
+const mapStateToProps = ({
+	questions: { questions, allLoaded },
+	isLoading,
+}) => ({
 	questions,
 	isLoading,
+	allLoaded,
 })
 
 const mapDispatchToProps = dispatch => ({
