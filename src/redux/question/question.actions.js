@@ -11,7 +11,7 @@ import {
 	deleteQuestionFirebase,
 	upvoteQuestion,
 	deUpvoteQuestion,
-} from '../../firebase.utils'
+} from '../../firebase/methods/firebase.question.methods'
 
 const setQuestions = questions => ({
 	type: QuestionActionTypes.SET_QUESTIONS,

@@ -18,7 +18,7 @@ import Page404 from './pages/404/404.component'
 import Header from './components/header/header.component'
 
 import { connect } from 'react-redux'
-import { firebase } from './firebase.utils'
+import firebase from './firebase/firebase'
 import { updateUser } from './redux/user/user.actions'
 import { setLoading, unsetLoading } from './redux/loader/loader.actions'
 

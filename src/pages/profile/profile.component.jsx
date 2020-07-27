@@ -2,8 +2,8 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { withRouter } from 'react-router-dom'
 
-import { firebase } from '../../firebase.utils'
-import { fetchUserById } from '../../firebase.utils'
+import firebase from '../../firebase/firebase'
+import { fetchUserById } from '../../firebase/methods/firebase.auth.methods'
 
 import './profile.styles.scss'
 

@@ -9,7 +9,7 @@ import {
 	deleteAnswerFirebase,
 	upvoteAnswer,
 	deUpvoteAnswer,
-} from '../../firebase.utils'
+} from '../../firebase/methods/firebase.answer.methods'
 
 const setAnswers = answers => ({
 	type: AnswerActionTypes.SET_ANSWERS,

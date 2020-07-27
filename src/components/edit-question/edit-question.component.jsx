@@ -75,7 +75,7 @@ class EditQuestion extends React.Component {
 					</small>
 				</button>
 
-				<div className='modal fade' id={`modal-${id}`}>
+				<div className='modal' id={`modal-${id}`}>
 					<div
 						className='modal-dialog modal-dialog-centered'
 						role='document'>

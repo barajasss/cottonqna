@@ -1,7 +1,7 @@
 import React from 'react'
 import './login.styles.scss'
 
-import { googleSignIn } from '../../firebase.utils'
+import { googleSignIn } from '../../firebase/methods/firebase.auth.methods'
 import { connect } from 'react-redux'
 
 class Login extends React.Component {

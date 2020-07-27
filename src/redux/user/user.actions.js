@@ -1,4 +1,4 @@
-import { firebase } from '../../firebase.utils'
+import firebase from '../../firebase/firebase'
 import UserActionTypes from './user.types'
 
 const setUser = user => ({

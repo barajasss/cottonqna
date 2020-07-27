@@ -20,7 +20,8 @@ class AboutPage extends React.Component {
 					<p>
 						<a
 							href='https://www.facebook.com/baraja.swargiary'
-							target='_blank'>
+							target='_blank'
+							rel='noopener noreferrer'>
 							Baraja Swargiary
 						</a>{' '}
 						(5th sem student, CS & IT dept, Cotton University)

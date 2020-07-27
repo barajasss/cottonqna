@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import './menu.styles.scss'
-import { googleSignOut } from '../../firebase.utils'
+import { googleSignOut } from '../../firebase/methods/firebase.auth.methods'
 
 import './menu.styles.scss'
 
