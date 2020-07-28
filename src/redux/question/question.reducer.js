@@ -15,7 +15,7 @@ const questionReducer = (state = initialQuestionState, action) => {
 		case QuestionActionTypes.SET_ALL_LOADED:
 			return {
 				...state,
-				allLoaded: true,
+				allLoaded: action.payload,
 			}
 		case QuestionActionTypes.UNSET_QUESTIONS:
 			return initialQuestionState

@@ -23,8 +23,9 @@ const appendQuestions = questions => ({
 	payload: questions,
 })
 
-const setAllLoaded = () => ({
+const setAllLoaded = allLoaded => ({
 	type: QuestionActionTypes.SET_ALL_LOADED,
+	payload: allLoaded,
 })
 
 const updateQuestion = question => ({
@@ -128,17 +129,7 @@ const fetchAndUpdateQuestions = () => async dispatch => {
 	dispatch(unsetQuestions())
 	const { questions, allLoaded } = await fetchQuestions()
 	dispatch(setQuestions(questions))
-	if (allLoaded) {
-		dispatch(setAllLoaded())
-	}
-	dispatch(unsetLoading())
-}
-
-const fetchByUidAndUpdateQuestions = uid => async dispatch => {
-	dispatch(setLoading())
-	dispatch(unsetQuestions())
-	const questions = await fetchQuestionsByUid(uid)
-	dispatch(setQuestions(questions))
+	dispatch(setAllLoaded(allLoaded))
 	dispatch(unsetLoading())
 }
 
@@ -148,9 +139,27 @@ const fetchNextAndUpdateQuestions = () => async (dispatch, getState) => {
 		getState().questions.questions.length
 	)
 	dispatch(appendQuestions(questions))
-	if (allLoaded) {
-		dispatch(setAllLoaded())
-	}
+	dispatch(setAllLoaded(allLoaded))
+	dispatch(unsetLoading())
+}
+
+const fetchByUidAndUpdateQuestions = uid => async dispatch => {
+	dispatch(setLoading())
+	dispatch(unsetQuestions())
+	const { questions, allLoaded } = await fetchQuestionsByUid(uid)
+	dispatch(setQuestions(questions))
+	dispatch(setAllLoaded(allLoaded))
+	dispatch(unsetLoading())
+}
+
+const fetchNextByUidAndUpdateQuestions = uid => async (dispatch, getState) => {
+	dispatch(setLoading())
+	const { questions, allLoaded } = await fetchQuestionsByUid(
+		uid,
+		getState().questions.questions.length
+	)
+	dispatch(appendQuestions(questions))
+	dispatch(setAllLoaded(allLoaded))
 	dispatch(unsetLoading())
 }
 
@@ -169,6 +178,7 @@ export {
 	searchNextAndUpdateQuestions,
 	fetchAndUpdateQuestion,
 	fetchAndUpdateQuestions,
-	fetchByUidAndUpdateQuestions,
 	fetchNextAndUpdateQuestions,
+	fetchByUidAndUpdateQuestions,
+	fetchNextByUidAndUpdateQuestions,
 }

@@ -77,13 +77,23 @@ const fetchQuestions = async (start = 0) => {
 		limit
 	)
 	try {
-		const questionsRef = await firebase
-			.firestore()
-			.collection('questions')
-			.orderBy('createdAt', 'desc')
-			.startAt(newVisible)
-			.limit(limit)
-			.get()
+		let questionsRef
+		if (newVisible) {
+			questionsRef = await firebase
+				.firestore()
+				.collection('questions')
+				.orderBy('createdAt', 'desc')
+				.startAt(newVisible)
+				.limit(limit)
+				.get()
+		} else {
+			questionsRef = await firebase
+				.firestore()
+				.collection('questions')
+				.orderBy('createdAt', 'desc')
+				.limit(limit)
+				.get()
+		}
 
 		for (let questionDoc of questionsRef.docs) {
 			const question = await questionWithAnswersAndUpvotes(
@@ -99,23 +109,43 @@ const fetchQuestions = async (start = 0) => {
 	}
 }
 
-const fetchQuestionsByUid = async uid => {
+const fetchQuestionsByUid = async (uid, start = 0) => {
 	const questions = []
+	const limit = 5
+	const [newVisible, allLoaded] = await getDocStartAt(
+		'questions',
+		start,
+		limit,
+		uid
+	)
 	try {
-		const questionsRef = await firebase
-			.firestore()
-			.collection('questions')
-			.where('uid', '==', uid)
-			.orderBy('createdAt', 'desc')
-			.get()
+		let questionsRef
+		if (newVisible) {
+			questionsRef = await firebase
+				.firestore()
+				.collection('questions')
+				.where('uid', '==', uid)
+				.orderBy('createdAt', 'desc')
+				.startAt(newVisible)
+				.limit(limit)
+				.get()
+		} else {
+			questionsRef = await firebase
+				.firestore()
+				.collection('questions')
+				.where('uid', '==', uid)
+				.orderBy('createdAt', 'desc')
+				.limit(limit)
+				.get()
+		}
 		for (let questionDoc of questionsRef.docs) {
 			const question = await questionWithAnswersAndUpvotes(questionDoc)
 			questions.push(question)
 		}
-		return questions
+		return { questions, allLoaded }
 	} catch (err) {
 		console.log(err)
-		return []
+		return { questions: [], allLoaded }
 	}
 }
 

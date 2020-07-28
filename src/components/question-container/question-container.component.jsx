@@ -8,6 +8,7 @@ import {
 } from '../../redux/question/question.actions'
 import { withRouter } from 'react-router-dom'
 import Question from '../question/question.component'
+import LoadMore from '../load-more/load-more.component'
 
 import { connect } from 'react-redux'
 
@@ -38,15 +39,13 @@ class QuestionContainer extends React.Component {
 		})
 	}
 
-	fetchNext = () => {
-		const { fetchNextAndUpdateQuestions, type } = this.props
-		if (type !== 'search') {
-			fetchNextAndUpdateQuestions()
-		}
-	}
-
 	render() {
-		const { questions, type, match, allLoaded, isLoading } = this.props
+		const {
+			questions,
+			type,
+			match,
+			fetchNextAndUpdateQuestions,
+		} = this.props
 		const { questionsFetched } = this.state
 		return (
 			<div className='mt-4'>
@@ -77,29 +76,15 @@ class QuestionContainer extends React.Component {
 				{questionsFetched &&
 					questions.length === 0 &&
 					type !== 'search' && <h5>Questions not found</h5>}
-				{!allLoaded && type !== 'search' ? (
-					<button
-						className='btn btn-primary'
-						onClick={this.fetchNext}>
-						{isLoading ? 'Loading...' : 'Load More'}
-					</button>
-				) : (
-					type !== 'search' && (
-						<h5 className='my-3'>No More Questions</h5>
-					)
-				)}
+
+				<LoadMore fetchNext={fetchNextAndUpdateQuestions} />
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({
-	questions: { questions, allLoaded },
-	isLoading,
-}) => ({
+const mapStateToProps = ({ questions: { questions } }) => ({
 	questions,
-	isLoading,
-	allLoaded,
 })
 
 const mapDispatchToProps = dispatch => ({

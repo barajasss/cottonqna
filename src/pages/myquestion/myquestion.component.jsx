@@ -8,7 +8,12 @@ import { Helmet } from 'react-helmet'
 import Question from '../../components/question/question.component'
 import EditQuestion from '../../components/edit-question/edit-question.component'
 
-import { fetchByUidAndUpdateQuestions } from '../../redux/question/question.actions'
+import LoadMore from '../../components/load-more/load-more.component'
+
+import {
+	fetchByUidAndUpdateQuestions,
+	fetchNextByUidAndUpdateQuestions,
+} from '../../redux/question/question.actions'
 
 class MyQuestionPage extends React.Component {
 	constructor() {
@@ -30,7 +35,8 @@ class MyQuestionPage extends React.Component {
 	render() {
 		const {
 			questions,
-			user: { isLoggedIn },
+			fetchNextByUidAndUpdateQuestions,
+			user: { isLoggedIn, uid },
 		} = this.props
 		const { questionsFetched } = this.state
 		return (
@@ -51,6 +57,9 @@ class MyQuestionPage extends React.Component {
 				{questionsFetched && questions.length === 0 && (
 					<h5>No questions found</h5>
 				)}
+				<LoadMore
+					fetchNext={() => fetchNextByUidAndUpdateQuestions(uid)}
+				/>
 			</div>
 		)
 	}
@@ -64,6 +73,8 @@ const mapStateToProps = ({ questions: { questions }, user }) => ({
 const mapDispatchToProps = dispatch => ({
 	fetchByUidAndUpdateQuestions: uid =>
 		dispatch(fetchByUidAndUpdateQuestions(uid)),
+	fetchNextByUidAndUpdateQuestions: uid =>
+		dispatch(fetchNextByUidAndUpdateQuestions(uid)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyQuestionPage)

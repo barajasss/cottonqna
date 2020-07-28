@@ -1,29 +1,41 @@
 import firebase from './firebase'
 
-const getDocStartAt = async (collection, start = 0, limit = 5) => {
-	const totalDocs = (await firebase.firestore().collection(collection).get())
-		.docs.length
-	let allLoaded = false
-	let newVisible, first
-	if (start === 0) {
-		newVisible = (
+const getDocStartAt = async (collection, start = 0, limit = 5, uid) => {
+	let totalDocs
+	if (uid) {
+		totalDocs = (
 			await firebase
 				.firestore()
 				.collection(collection)
-				.orderBy('createdAt', 'desc')
-				.limit(1)
+				.where('uid', '==', uid)
 				.get()
-		).docs[0]
+		).docs.length
 	} else {
-		first = await firebase
-			.firestore()
-			.collection(collection)
-			.orderBy('createdAt', 'desc')
-			.limit(start + 1)
-			.get()
+		totalDocs = (await firebase.firestore().collection(collection).get())
+			.docs.length
+	}
+	let allLoaded = false
+	let newVisible, first
+	if (start !== 0) {
+		if (uid) {
+			first = await firebase
+				.firestore()
+				.collection(collection)
+				.where('uid', '==', uid)
+				.orderBy('createdAt', 'desc')
+				.limit(start + 1)
+				.get()
+		} else {
+			first = await firebase
+				.firestore()
+				.collection(collection)
+				.orderBy('createdAt', 'desc')
+				.limit(start + 1)
+				.get()
+		}
 		newVisible = first.docs[first.docs.length - 1]
 	}
-	if ((first && first.docs.length === totalDocs) || totalDocs <= limit) {
+	if (totalDocs <= start + limit) {
 		allLoaded = true
 	}
 	return [newVisible, allLoaded]
