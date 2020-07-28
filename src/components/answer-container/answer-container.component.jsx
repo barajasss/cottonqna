@@ -3,7 +3,11 @@ import './answer-container.styles.scss'
 
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { fetchAndUpdateAnswers } from '../../redux/answer/answer.actions'
+import {
+	fetchAndUpdateAnswers,
+	fetchNextAndUpdateAnswers,
+} from '../../redux/answer/answer.actions'
+import LoadMore from '../load-more/load-more.component'
 
 import Answer from '../answer/answer.component'
 
@@ -26,7 +30,12 @@ class AnswerContainer extends React.Component {
 		}
 	}
 	render() {
-		const { answers } = this.props
+		const {
+			answers,
+			allLoaded,
+			fetchNextAndUpdateAnswers,
+			match: { params },
+		} = this.props
 		return (
 			<div>
 				<div className='m-0 p-1 bg-light text-center border-bottom'>
@@ -35,18 +44,27 @@ class AnswerContainer extends React.Component {
 				{answers.map(answerDoc => (
 					<Answer key={answerDoc.id} {...answerDoc} />
 				))}
+				<LoadMore
+					fetchNext={() =>
+						fetchNextAndUpdateAnswers(params.questionId)
+					}
+					allLoaded={allLoaded}
+				/>
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ answers }) => ({
+const mapStateToProps = ({ answers: { answers, allLoaded } }) => ({
 	answers,
+	allLoaded,
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchAndUpdateAnswers: questionId =>
 		dispatch(fetchAndUpdateAnswers(questionId)),
+	fetchNextAndUpdateAnswers: questionId =>
+		dispatch(fetchNextAndUpdateAnswers(questionId)),
 })
 
 export default connect(

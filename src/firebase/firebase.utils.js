@@ -1,13 +1,14 @@
 import firebase from './firebase'
 
-const getDocStartAt = async (collection, start = 0, limit = 5, uid) => {
+const getDocStartAt = async (collection, options) => {
+	const { start = 0, limit = 5, id } = options
 	let totalDocs
-	if (uid) {
+	if (id) {
 		totalDocs = (
 			await firebase
 				.firestore()
 				.collection(collection)
-				.where('uid', '==', uid)
+				.where(id.name, '==', id.value)
 				.get()
 		).docs.length
 	} else {
@@ -17,11 +18,11 @@ const getDocStartAt = async (collection, start = 0, limit = 5, uid) => {
 	let allLoaded = false
 	let newVisible, first
 	if (start !== 0) {
-		if (uid) {
+		if (id) {
 			first = await firebase
 				.firestore()
 				.collection(collection)
-				.where('uid', '==', uid)
+				.where(id.name, '==', id.value)
 				.orderBy('createdAt', 'desc')
 				.limit(start + 1)
 				.get()

@@ -27,6 +27,9 @@ class MyQuestionPage extends React.Component {
 			fetchByUidAndUpdateQuestions,
 			user: { uid },
 		} = this.props
+		if (!uid) {
+			return
+		}
 		await fetchByUidAndUpdateQuestions(uid)
 		this.setState({
 			questionsFetched: true,
@@ -35,6 +38,7 @@ class MyQuestionPage extends React.Component {
 	render() {
 		const {
 			questions,
+			allLoaded,
 			fetchNextByUidAndUpdateQuestions,
 			user: { isLoggedIn, uid },
 		} = this.props
@@ -59,14 +63,16 @@ class MyQuestionPage extends React.Component {
 				)}
 				<LoadMore
 					fetchNext={() => fetchNextByUidAndUpdateQuestions(uid)}
+					allLoaded={allLoaded}
 				/>
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ questions: { questions }, user }) => ({
+const mapStateToProps = ({ questions: { questions, allLoaded }, user }) => ({
 	questions,
+	allLoaded,
 	user,
 })
 

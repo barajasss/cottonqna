@@ -44,32 +44,8 @@ class AboutPage extends React.Component {
 							With every project, I have to spend hours of time
 							and cost on making this possible. Any amount of
 							support or donation that you provide will greatly
-							help me grow and continue working on exciting
+							help me improve and continue working on exciting
 							projects like this.
-						</p>
-						<table className='table table-striped table-bordered'>
-							<tbody>
-								<tr>
-									<td>Member Supporter</td>
-									<td>1 - 50 rs</td>
-								</tr>
-								<tr>
-									<td>Team Supporter</td>
-									<td>50 - 200 rs</td>
-								</tr>
-								<tr>
-									<td>Project Supporter</td>
-									<td>200 - 500 rs</td>
-								</tr>
-								<tr>
-									<td>VIP Supporter</td>
-									<td>500 rs and above</td>
-								</tr>
-							</tbody>
-						</table>
-						<p>
-							Project and VIP supporters will be listed on this
-							page.
 						</p>
 					</div>
 					<p>
@@ -77,6 +53,9 @@ class AboutPage extends React.Component {
 						<br />
 						Paytm Wallet: <b>8472901882</b>
 					</p>
+					<h5 class='text-center text-primary'>
+						Thank you for visiting.
+					</h5>
 				</div>
 			</div>
 		)

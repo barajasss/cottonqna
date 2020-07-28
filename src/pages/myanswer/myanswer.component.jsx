@@ -8,7 +8,11 @@ import { Helmet } from 'react-helmet'
 import Answer from '../../components/answer/answer.component'
 import EditAnswer from '../../components/edit-answer/edit-answer.component'
 
-import { fetchByUidAndUpdateAnswers } from '../../redux/answer/answer.actions'
+import {
+	fetchByUidAndUpdateAnswers,
+	fetchNextByUidAndUpdateAnswers,
+} from '../../redux/answer/answer.actions'
+import LoadMore from '../../components/load-more/load-more.component'
 
 class MyAnswerPage extends React.Component {
 	constructor() {
@@ -22,6 +26,9 @@ class MyAnswerPage extends React.Component {
 			fetchByUidAndUpdateAnswers,
 			user: { uid },
 		} = this.props
+		if (!uid) {
+			return
+		}
 		await fetchByUidAndUpdateAnswers(uid)
 		this.setState({
 			answersFetched: true,
@@ -30,7 +37,9 @@ class MyAnswerPage extends React.Component {
 	render() {
 		const {
 			answers,
-			user: { isLoggedIn },
+			user: { isLoggedIn, uid },
+			allLoaded,
+			fetchNextByUidAndUpdateAnswers,
 		} = this.props
 		const { answersFetched } = this.state
 		return (
@@ -51,19 +60,26 @@ class MyAnswerPage extends React.Component {
 				{answersFetched && answers.length === 0 && (
 					<h5>No answers found</h5>
 				)}
+				<LoadMore
+					fetchNext={() => fetchNextByUidAndUpdateAnswers(uid)}
+					allLoaded={allLoaded}
+				/>
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ answers, user }) => ({
+const mapStateToProps = ({ answers: { answers, allLoaded }, user }) => ({
 	answers,
+	allLoaded,
 	user,
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchByUidAndUpdateAnswers: uid =>
 		dispatch(fetchByUidAndUpdateAnswers(uid)),
+	fetchNextByUidAndUpdateAnswers: uid =>
+		dispatch(fetchNextByUidAndUpdateAnswers(uid)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAnswerPage)

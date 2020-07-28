@@ -1,6 +1,6 @@
 import firebase from '../firebase'
 
-import { answerWithUpvotes } from '../firebase.utils'
+import { answerWithUpvotes, getDocStartAt } from '../firebase.utils'
 
 const postAnswer = async ({
 	uid,
@@ -30,45 +30,91 @@ const postAnswer = async ({
 	return answerData
 }
 
-const fetchAnswers = async questionId => {
+const fetchAnswers = async (questionId, start = 0) => {
+	const answers = []
+	const limit = 5
+	const [newVisible, allLoaded] = await getDocStartAt('answers', {
+		start,
+		limit,
+		id: {
+			name: 'questionId',
+			value: questionId,
+		},
+	})
+	let answersRef
 	try {
-		const answersRef = await firebase
-			.firestore()
-			.collection('answers')
-			.where('questionId', '==', questionId)
-			.orderBy('createdAt', 'desc')
-			.get()
-		let answers = []
+		if (newVisible) {
+			answersRef = await firebase
+				.firestore()
+				.collection('answers')
+				.where('questionId', '==', questionId)
+				.orderBy('createdAt', 'desc')
+				.startAt(newVisible)
+				.limit(limit)
+				.get()
+		} else {
+			answersRef = await firebase
+				.firestore()
+				.collection('answers')
+				.where('questionId', '==', questionId)
+				.orderBy('createdAt', 'desc')
+				.limit(limit)
+				.get()
+		}
+
 		for (let answerDoc of answersRef.docs) {
 			const answer = await answerWithUpvotes(answerDoc)
 			answers.push(answer)
 		}
-		return answers
+		return { answers, allLoaded }
 	} catch (err) {
 		console.log(err)
-		return []
+		return { answers: [], allLoaded }
 	}
 }
 
-const fetchAnswersByUid = async uid => {
+const fetchAnswersByUid = async (uid, start = 0) => {
 	const answers = []
+	const limit = 5
+	const [newVisible, allLoaded] = await getDocStartAt('answers', {
+		start,
+		limit,
+		id: {
+			name: 'uid',
+			value: uid,
+		},
+	})
 	try {
-		const answersRef = await firebase
-			.firestore()
-			.collection('answers')
-			.where('uid', '==', uid)
-			.orderBy('createdAt', 'desc')
-			.get()
+		let answersRef
+		if (newVisible) {
+			answersRef = await firebase
+				.firestore()
+				.collection('answers')
+				.where('uid', '==', uid)
+				.orderBy('createdAt', 'desc')
+				.startAt(newVisible)
+				.limit(limit)
+				.get()
+		} else {
+			answersRef = await firebase
+				.firestore()
+				.collection('answers')
+				.where('uid', '==', uid)
+				.orderBy('createdAt', 'desc')
+				.limit(limit)
+				.get()
+		}
+
 		await Promise.all(
 			answersRef.docs.map(async answerDoc => {
 				const answer = await answerWithUpvotes(answerDoc)
 				answers.push(answer)
 			})
 		)
-		return answers
+		return { answers, allLoaded }
 	} catch (err) {
 		console.log(err)
-		return []
+		return { answers: [], allLoaded }
 	}
 }
 

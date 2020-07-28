@@ -30,6 +30,16 @@ const updateAnswer = answer => ({
 	payload: answer,
 })
 
+const appendAnswers = answers => ({
+	type: AnswerActionTypes.APPEND_ANSWERS,
+	payload: answers,
+})
+
+const setAllLoaded = allLoaded => ({
+	type: AnswerActionTypes.ALL_LOADED,
+	payload: allLoaded,
+})
+
 const removeAnswer = answerId => ({
 	type: AnswerActionTypes.REMOVE_ANSWER,
 	payload: answerId,
@@ -49,15 +59,41 @@ const postAndUpdateAnswer = answer => async dispatch => {
 const fetchAndUpdateAnswers = questionId => async dispatch => {
 	dispatch(setLoading())
 	dispatch(unsetAnswers())
-	const answers = await fetchAnswers(questionId)
+	const { answers, allLoaded } = await fetchAnswers(questionId)
 	dispatch(setAnswers(answers))
+	dispatch(setAllLoaded(allLoaded))
+	dispatch(unsetLoading())
+}
+
+const fetchNextAndUpdateAnswers = questionId => async (dispatch, getState) => {
+	dispatch(setLoading())
+	const { answers, allLoaded } = await fetchAnswers(
+		questionId,
+		getState().answers.answers.length
+	)
+	dispatch(appendAnswers(answers))
+	dispatch(setAllLoaded(allLoaded))
+	dispatch(unsetLoading())
 }
 
 const fetchByUidAndUpdateAnswers = uid => async dispatch => {
 	dispatch(setLoading())
 	dispatch(unsetAnswers())
-	const answers = await fetchAnswersByUid(uid)
+	const { answers, allLoaded } = await fetchAnswersByUid(uid)
 	dispatch(setAnswers(answers))
+
+	dispatch(setAllLoaded(allLoaded))
+	dispatch(unsetLoading())
+}
+
+const fetchNextByUidAndUpdateAnswers = uid => async (dispatch, getState) => {
+	dispatch(setLoading())
+	const { answers, allLoaded } = await fetchAnswersByUid(
+		uid,
+		getState().answers.answers.length
+	)
+	dispatch(appendAnswers(answers))
+	dispatch(setAllLoaded(allLoaded))
 	dispatch(unsetLoading())
 }
 
@@ -109,7 +145,9 @@ export {
 	removeAnswer,
 	// thunks
 	fetchAndUpdateAnswers,
+	fetchNextAndUpdateAnswers,
 	fetchByUidAndUpdateAnswers,
+	fetchNextByUidAndUpdateAnswers,
 	postAndUpdateAnswer,
 	updateAnswerAsync,
 	deleteAnswerAsync,

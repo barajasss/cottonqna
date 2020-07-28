@@ -71,11 +71,10 @@ const searchQuestions = async (searchTerm = '') => {
 const fetchQuestions = async (start = 0) => {
 	const questions = []
 	const limit = 5
-	const [newVisible, allLoaded] = await getDocStartAt(
-		'questions',
+	const [newVisible, allLoaded] = await getDocStartAt('questions', {
 		start,
-		limit
-	)
+		limit,
+	})
 	try {
 		let questionsRef
 		if (newVisible) {
@@ -112,12 +111,14 @@ const fetchQuestions = async (start = 0) => {
 const fetchQuestionsByUid = async (uid, start = 0) => {
 	const questions = []
 	const limit = 5
-	const [newVisible, allLoaded] = await getDocStartAt(
-		'questions',
+	const [newVisible, allLoaded] = await getDocStartAt('questions', {
 		start,
 		limit,
-		uid
-	)
+		id: {
+			name: 'uid',
+			value: uid,
+		},
+	})
 	try {
 		let questionsRef
 		if (newVisible) {

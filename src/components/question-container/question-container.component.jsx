@@ -45,6 +45,7 @@ class QuestionContainer extends React.Component {
 			type,
 			match,
 			fetchNextAndUpdateQuestions,
+			allLoaded,
 		} = this.props
 		const { questionsFetched } = this.state
 		return (
@@ -77,14 +78,18 @@ class QuestionContainer extends React.Component {
 					questions.length === 0 &&
 					type !== 'search' && <h5>Questions not found</h5>}
 
-				<LoadMore fetchNext={fetchNextAndUpdateQuestions} />
+				<LoadMore
+					fetchNext={fetchNextAndUpdateQuestions}
+					allLoaded={allLoaded}
+				/>
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = ({ questions: { questions } }) => ({
+const mapStateToProps = ({ questions: { questions, allLoaded } }) => ({
 	questions,
+	allLoaded,
 })
 
 const mapDispatchToProps = dispatch => ({
