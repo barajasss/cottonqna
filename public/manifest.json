@@ -11,6 +11,6 @@
 	"description": "A site to ask and answer questions related to anything about Cotton University and it's students.",
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#000000",
+	"theme_color": "#1e90ff",
 	"background_color": "#ffffff"
 }
