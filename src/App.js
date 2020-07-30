@@ -4,11 +4,14 @@ import './App.css'
 import { Route, Switch } from 'react-router-dom'
 
 import Header from './components/header/header.component'
+import ErrorBoundary from './components/error-boundary/error-boundary.component'
 
 import { connect } from 'react-redux'
 import firebase from './firebase/firebase'
 import { updateUser } from './redux/user/user.actions'
 import { setLoading, unsetLoading } from './redux/loader/loader.actions'
+
+// PAGES
 
 const HomePage = lazy(() => import('./pages/home/home.component'))
 const ProfilePage = lazy(() => import('./pages/profile/profile.component'))
@@ -46,51 +49,61 @@ class App extends React.Component {
 		return (
 			<div className='App'>
 				<Header />
-				<Suspense fallback={<h3>Loading...</h3>}>
-					<Switch>
-						<Route exact path='/' component={HomePage} />
-						<Route exact path='/menu' component={MenuPage} />
-						<Route exact path='/profile' component={ProfilePage} />
-						<Route
-							exact
-							path='/profile/:uid'
-							component={ProfilePage}
-						/>
-						<Route
-							exact
-							path='/post-question'
-							component={PostQuestionPage}
-						/>
-						<Route
-							exact
-							path='/questions/:questionId'
-							component={QuestionPage}
-						/>
-						<Route
-							exact
-							path='/menu/myquestions'
-							component={MyQuestionPage}
-						/>
-						<Route
-							exact
-							path='/menu/myanswers'
-							component={MyAnswerPage}
-						/>
-						<Route
-							exact
-							path='/search/:searchText'
-							component={SearchPage}
-						/>
-						<Route exact path='/search' component={SearchPage} />
-						<Route exact path='/about' component={AboutPage} />
-						<Route
-							exact
-							path='/guidelines'
-							component={GuidelinePage}
-						/>
-						<Route exact component={Page404} />
-					</Switch>
-				</Suspense>
+				<ErrorBoundary>
+					<Suspense fallback={<h3>Loading...</h3>}>
+						<Switch>
+							<Route exact path='/' component={HomePage} />
+							<Route exact path='/menu' component={MenuPage} />
+							<Route
+								exact
+								path='/profile'
+								component={ProfilePage}
+							/>
+							<Route
+								exact
+								path='/profile/:uid'
+								component={ProfilePage}
+							/>
+							<Route
+								exact
+								path='/post-question'
+								component={PostQuestionPage}
+							/>
+							<Route
+								exact
+								path='/questions/:questionId'
+								component={QuestionPage}
+							/>
+							<Route
+								exact
+								path='/menu/myquestions'
+								component={MyQuestionPage}
+							/>
+							<Route
+								exact
+								path='/menu/myanswers'
+								component={MyAnswerPage}
+							/>
+							<Route
+								exact
+								path='/search/:searchText'
+								component={SearchPage}
+							/>
+							<Route
+								exact
+								path='/search'
+								component={SearchPage}
+							/>
+							<Route exact path='/about' component={AboutPage} />
+							<Route
+								exact
+								path='/guidelines'
+								component={GuidelinePage}
+							/>
+							<Route exact component={Page404} />
+						</Switch>
+					</Suspense>
+				</ErrorBoundary>
 			</div>
 		)
 	}
