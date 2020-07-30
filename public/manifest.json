@@ -1,13 +1,14 @@
 {
-	"short_name": "React App",
-	"name": "Create React App Sample",
+	"name": "Cotton Q & A",
+	"short_name": "Cotton Q & A",
 	"icons": [
 		{
-			"src": "favicon.ico",
+			"src": "logo.png",
 			"sizes": "64x64 32x32 24x24 16x16",
 			"type": "image/x-icon"
 		}
 	],
+	"description": "A site to ask and answer questions related to anything about Cotton University and it's students.",
 	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#000000",

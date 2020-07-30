@@ -28,9 +28,44 @@ class Header extends React.Component {
 				{(location.pathname === '/' ||
 					location.pathname === '/about' ||
 					location.pathname === '/guidelines') && (
-					<div className='card p-4 mb-3 text-center brand-display'>
-						<h3 className=''>কটন Q & A</h3>
-						<small>an online community for cottonians</small>
+					<div
+						className='card p-4 mb-3 text-center brand-display text-white'
+						style={{
+							backgroundImage: 'url("/cotton mcb.png")',
+							backgronudSize: 'cover',
+							backgroundPosition: 'center center',
+							textShadow: '2px 2px 5px #000',
+							// boxShadow: '1px 1px 5px 1px #fff inset',
+							border: 'none',
+						}}>
+						<img
+							src='/logo.png'
+							className='img-responsive'
+							style={{
+								maxWidth: '30px',
+								height: 'auto',
+								position: 'absolute',
+								left: '10px',
+								top: '10px',
+							}}
+							alt='cottonqna logo'
+						/>
+						<div
+							style={{
+								backgroundColor: 'rgba(0, 0, 0, 0.7)',
+								width: '80%',
+								margin: '0 auto',
+								borderRadius: '5px',
+								padding: '0.5rem',
+							}}>
+							<h3 style={{ display: 'inline-block', margin: 0 }}>
+								কটন Q & A
+							</h3>
+							<br />
+							<small className='h6'>
+								an online community for cottonians
+							</small>
+						</div>
 					</div>
 				)}
 				{!isLoggedIn ? <Login /> : ''}

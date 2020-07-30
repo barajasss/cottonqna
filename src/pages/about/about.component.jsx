@@ -53,7 +53,7 @@ class AboutPage extends React.Component {
 						<br />
 						Paytm Wallet: <b>8472901882</b>
 					</p>
-					<h5 class='text-center text-primary'>
+					<h5 className='text-center text-primary'>
 						Thank you for visiting.
 					</h5>
 				</div>
