@@ -20,13 +20,13 @@ class AnswerContainer extends React.Component {
 		await fetchAndUpdateAnswers(params.questionId)
 	}
 	renderAnswerHeading() {
-		const { answers } = this.props
-		if (answers.length === 0) {
+		const { answerCount } = this.props
+		if (answerCount === 0) {
 			return 'No Answers'
-		} else if (answers.length === 1) {
+		} else if (answerCount === 1) {
 			return '1 Answer'
 		} else {
-			return `${answers.length} Answers`
+			return `${answerCount} Answers`
 		}
 	}
 	render() {

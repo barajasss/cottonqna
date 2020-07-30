@@ -65,7 +65,9 @@ class QuestionPage extends React.Component {
 								expanded
 							/>
 							{this.renderAnswerForm()}
-							<AnswerContainer />
+							<AnswerContainer
+								answerCount={question.answerCount}
+							/>
 						</div>
 					) : (
 						''

@@ -30,7 +30,7 @@ const fetchQuestion = async questionId => {
 			.firestore()
 			.doc(`/questions/${questionId}`)
 			.get()
-		const question = questionWithAnswersAndUpvotes(questionDoc)
+		const question = await questionWithAnswersAndUpvotes(questionDoc)
 		return question
 	} catch (err) {
 		console.log(err)
