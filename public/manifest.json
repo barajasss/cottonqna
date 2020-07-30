@@ -4,8 +4,23 @@
 	"icons": [
 		{
 			"src": "logo.png",
-			"sizes": "64x64 32x32 24x24 16x16",
-			"type": "image/x-icon"
+			"sizes": "16x16",
+			"type": "image/png"
+		},
+		{
+			"src": "logo.png",
+			"sizes": "24x24",
+			"type": "image/png"
+		},
+		{
+			"src": "logo.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "logo.png",
+			"sizes": "64x64",
+			"type": "image/png"
 		}
 	],
 	"description": "A site to ask and answer questions related to anything about Cotton University and it's students.",
