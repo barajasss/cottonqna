@@ -52,7 +52,7 @@ class Header extends React.Component {
 						/>
 						<div
 							style={{
-								backgroundColor: 'rgba(0, 0, 0, 0.7)',
+								backgroundColor: 'rgba(0, 0, 0, 0.5)',
 								width: '80%',
 								margin: '0 auto',
 								borderRadius: '5px',

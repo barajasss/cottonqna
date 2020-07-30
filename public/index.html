@@ -60,6 +60,9 @@
             console.log('Service worker registration failed', err)
           })
       })
+      window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('before install')
+      })
     }
   </script>
 </body>

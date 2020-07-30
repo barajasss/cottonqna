@@ -1,5 +1,5 @@
 self.addEventListener('install', function (e) {
-	console.log('service worker ionstalled')
+	console.log('service worker installed')
 	e.waitUntil(
 		caches.open('cottonqna-cache').then(cache => {
 			return cache.addAll([
@@ -7,8 +7,6 @@ self.addEventListener('install', function (e) {
 				'/cotton mcb.png',
 				'/google icon.png',
 				'/logo.png',
-				'/*.chunk.js',
-				'/*.chunk.css',
 				'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css',
 				'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css',
 				'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js',
@@ -18,6 +16,7 @@ self.addEventListener('install', function (e) {
 		})
 	)
 })
+
 
 self.addEventListener('fetch', function (e) {
 	e.respondWith(
