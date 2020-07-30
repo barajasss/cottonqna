@@ -12,6 +12,11 @@ class GuidelinePage extends React.Component {
 				</p>
 				<ol className='pl-4 guidelines'>
 					<li>
+						This is a Progressive Web App. Click "Add to homescreen"
+						from three dots at the top right to install it and get
+						app like experience.
+					</li>
+					<li>
 						Please don't use any disrespectful words in your
 						answer/questions.
 					</li>
