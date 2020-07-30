@@ -49,11 +49,6 @@ const questionWithAnswersAndUpvotes = async (
 	if (!questionDoc.exists) {
 		return null
 	}
-	let answers = await firebase
-		.firestore()
-		.collection('answers')
-		.where('questionId', '==', questionDoc.id)
-		.get()
 	let upvotesCollection = await firebase
 		.firestore()
 		.collection(`/questions/${questionDoc.id}/upvotes`)
@@ -68,22 +63,31 @@ const questionWithAnswersAndUpvotes = async (
 		...questionDoc.data(),
 		upvotes: upvotesCollection,
 		firstAnswer: null,
-		answerCount: answers.docs.length,
 	}
-	if (getFirstAnswer && !answers.empty) {
-		let firstAnswerUpvotes = await firebase
-			.firestore()
-			.collection(`/answers/${answers.docs[0].id}/upvotes`)
-			.get()
-		if (firstAnswerUpvotes.empty) {
-			firstAnswerUpvotes = []
-		} else {
-			firstAnswerUpvotes = firstAnswerUpvotes.docs
-		}
-		question.firstAnswer = {
-			id: answers.docs[0].id,
-			...answers.docs[0].data(),
-			upvotes: firstAnswerUpvotes,
+	if (getFirstAnswer) {
+		let firstAnswer = (
+			await firebase
+				.firestore()
+				.collection('answers')
+				.where('questionId', '==', questionDoc.id)
+				.limit(1)
+				.get()
+		).docs[0]
+		if (firstAnswer) {
+			let firstAnswerUpvotes = await firebase
+				.firestore()
+				.collection(`/answers/${firstAnswer.id}/upvotes`)
+				.get()
+			if (firstAnswerUpvotes.empty) {
+				firstAnswerUpvotes = []
+			} else {
+				firstAnswerUpvotes = firstAnswerUpvotes.docs
+			}
+			question.firstAnswer = {
+				id: firstAnswer.id,
+				...firstAnswer.data(),
+				upvotes: firstAnswerUpvotes,
+			}
 		}
 	}
 	return question

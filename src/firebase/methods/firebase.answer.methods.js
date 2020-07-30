@@ -22,6 +22,13 @@ const postAnswer = async ({
 		.collection('answers')
 		.doc(answerDoc.id)
 		.get()
+	await firebase
+		.firestore()
+		.collection('questions')
+		.doc(questionId)
+		.update({
+			answerCount: firebase.firestore.FieldValue.increment(1),
+		})
 	const answerData = {
 		id: answerDoc.id,
 		...answerDocData.data(),
@@ -135,6 +142,17 @@ const updateAnswerFirebase = async ({ id, answer }) => {
 
 const deleteAnswerFirebase = async answerId => {
 	try {
+		const answer = await firebase
+			.firestore()
+			.doc(`/answers/${answerId}`)
+			.get()
+		await firebase
+			.firestore()
+			.collection('questions')
+			.doc(answer.data().questionId)
+			.update({
+				answerCount: firebase.firestore.FieldValue.increment(-1),
+			})
 		await firebase.firestore().doc(`/answers/${answerId}`).delete()
 		const upvotes = await firebase
 			.firestore()

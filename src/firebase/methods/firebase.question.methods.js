@@ -19,6 +19,7 @@ const postQuestion = async ({
 		category,
 		discipline,
 		tags,
+		answerCount: 0,
 		createdAt: Date.now(),
 	})
 }
