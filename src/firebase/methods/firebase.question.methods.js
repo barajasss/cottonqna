@@ -181,7 +181,6 @@ const updateQuestionFirebase = async ({
 
 const deleteQuestionFirebase = async questionId => {
 	try {
-		await firebase.firestore().doc(`/questions/${questionId}`).delete()
 		const answers = await firebase
 			.firestore()
 			.collection(`answers`)
@@ -207,6 +206,8 @@ const deleteQuestionFirebase = async questionId => {
 				})
 			)
 		}
+		// the question doc is used in security rules so question is deleted after all answers are deleted
+		await firebase.firestore().doc(`/questions/${questionId}`).delete()
 	} catch (err) {
 		console.log(err)
 	}
