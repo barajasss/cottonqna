@@ -45,7 +45,7 @@ class Question extends React.Component {
 				.share({
 					title: `Answer Cotton Q & A Question`,
 					text: question,
-					url: `http://localhost:3000/questions/${questionId}`,
+					url: `https://cottonqna.co/questions/${questionId}`,
 				})
 				.then(() => {
 					console.log('shared successfully')
