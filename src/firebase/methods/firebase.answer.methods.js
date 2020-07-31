@@ -26,9 +26,12 @@ const postAnswer = async ({
 		.firestore()
 		.collection('questions')
 		.doc(questionId)
-		.update({
-			answerCount: firebase.firestore.FieldValue.increment(1),
-		})
+		.set(
+			{
+				answerCount: firebase.firestore.FieldValue.increment(1),
+			},
+			{ merge: true }
+		)
 	const answerData = {
 		id: answerDoc.id,
 		...answerDocData.data(),

@@ -1,5 +1,7 @@
 import AnswerActionTypes from './answer.types'
 import { setLoading, unsetLoading } from '../loader/loader.actions'
+import { updateQuestion } from '../question/question.actions'
+import { fetchQuestion } from '../../firebase/methods/firebase.question.methods'
 
 import {
 	postAnswer,
@@ -53,6 +55,8 @@ const postAndUpdateAnswer = answer => async dispatch => {
 	if (answerDoc) {
 		dispatch(addAnswer(answerDoc))
 	}
+	const questionDoc = await fetchQuestion(answerDoc.questionId)
+	dispatch(updateQuestion(questionDoc))
 	dispatch(unsetLoading())
 }
 

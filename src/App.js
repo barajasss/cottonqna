@@ -50,7 +50,7 @@ class App extends React.Component {
 			<div className='App'>
 				<Header />
 				<ErrorBoundary>
-					<Suspense fallback={<h3>Loading...</h3>}>
+					<Suspense fallback={<h4>Loading...</h4>}>
 						<Switch>
 							<Route exact path='/' component={HomePage} />
 							<Route exact path='/menu' component={MenuPage} />
