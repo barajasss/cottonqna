@@ -26,6 +26,19 @@ class AboutPage extends React.Component {
 						</a>{' '}
 						(5th sem student, CS & IT dept, Cotton University)
 					</p>
+					<h5 className='mt-4'>
+						Thanks to our department students from Tech Club:
+					</h5>
+					<p>
+						Reviricha Bora(Dept Representative), Daya, Sauvik Nath,
+						Rohan Saikia, Abhilash Neog, Biku, Stuti Das, Ishika,
+						Arnab
+					</p>
+
+					<h5 className='mt-4'>
+						Thanks to Bodo Literary Society(BLS) for support:
+					</h5>
+					<p>Mathias Swargiary and other members.</p>
 					<h5>Email: </h5>
 					<p>barajaswargiary4444@gmail.com</p>
 				</div>

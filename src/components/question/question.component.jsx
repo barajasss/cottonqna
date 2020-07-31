@@ -43,7 +43,7 @@ class Question extends React.Component {
 		if ('share' in window.navigator) {
 			navigator
 				.share({
-					title: `Answer Cotton Q & A Question`,
+					title: `Can you answer this Cotton Q & A Question?`,
 					text: question,
 					url: `https://cottonqna.co/questions/${questionId}`,
 				})
@@ -155,28 +155,25 @@ class Question extends React.Component {
 						{upvotes.length === 1 ? 'upvote' : 'upvotes'}
 					</small>
 				</button>
-
+				{expanded && displayShareIcon && (
+					<button
+						className='btn btn-link pr-0'
+						onClick={() => this.sharePopup()}>
+						<small>
+							<i className='fas fa-share-alt' />
+							Share
+						</small>
+					</button>
+				)}
 				{expanded && isLoggedIn ? (
-					<span>
-						{displayShareIcon && (
-							<button
-								className='btn btn-link pr-0'
-								onClick={() => this.sharePopup()}>
-								<small>
-									<i className='fas fa-share-alt' />
-									Share{' '}
-								</small>
-							</button>
-						)}
-						<button
-							className='btn btn-link pr-0'
-							onClick={toggleAnswerForm}>
-							<small>
-								<i className='fas fa-pen' />
-								Answer
-							</small>
-						</button>
-					</span>
+					<button
+						className='btn btn-link pr-0'
+						onClick={toggleAnswerForm}>
+						<small>
+							<i className='fas fa-pen' />
+							Answer
+						</small>
+					</button>
 				) : (
 					<button className='btn btn-link pr-0' disabled>
 						<small>
