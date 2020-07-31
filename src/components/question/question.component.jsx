@@ -17,6 +17,8 @@ class Question extends React.Component {
 		super()
 		this.state = {
 			upvoted: false,
+			displayShareIcon:
+				window.innerWidth <= 800 && window.innerHeight <= 900,
 		}
 	}
 
@@ -36,6 +38,23 @@ class Question extends React.Component {
 		})
 	}
 
+	sharePopup = () => {
+		const { id: questionId, question } = this.props
+		if ('share' in window.navigator) {
+			navigator
+				.share({
+					title: `Answer Cotton Q & A Question`,
+					text: question,
+					url: `http://localhost:3000/questions/${questionId}`,
+				})
+				.then(() => {
+					console.log('shared successfully')
+				})
+				.catch(err => {
+					console.log('share error')
+				})
+		}
+	}
 	componentDidMount = () => {
 		const { upvotes, user } = this.props
 		const upvoteIds = upvotes.map(upvoteDoc => upvoteDoc.data().uid)
@@ -65,7 +84,7 @@ class Question extends React.Component {
 			// methods
 			toggleAnswerForm,
 		} = this.props
-		const { upvoted } = this.state
+		const { upvoted, displayShareIcon } = this.state
 		return (
 			<div className='question py-2'>
 				<p className='pb-1 m-0'>
@@ -138,14 +157,26 @@ class Question extends React.Component {
 				</button>
 
 				{expanded && isLoggedIn ? (
-					<button
-						className='btn btn-link pr-0'
-						onClick={toggleAnswerForm}>
-						<small>
-							<i className='fas fa-pen' />
-							Answer
-						</small>
-					</button>
+					<span>
+						{displayShareIcon && (
+							<button
+								className='btn btn-link pr-0'
+								onClick={() => this.sharePopup()}>
+								<small>
+									<i className='fas fa-share-alt' />
+									Share{' '}
+								</small>
+							</button>
+						)}
+						<button
+							className='btn btn-link pr-0'
+							onClick={toggleAnswerForm}>
+							<small>
+								<i className='fas fa-pen' />
+								Answer
+							</small>
+						</button>
+					</span>
 				) : (
 					<button className='btn btn-link pr-0' disabled>
 						<small>
