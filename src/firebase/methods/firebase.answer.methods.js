@@ -40,9 +40,8 @@ const postAnswer = async ({
 	return answerData
 }
 
-const fetchAnswers = async (questionId, start = 0) => {
+const fetchAnswers = async (questionId, start = 0, limit = 5) => {
 	const answers = []
-	const limit = 5
 	const [newVisible, allLoaded] = await getDocStartAt('answers', {
 		start,
 		limit,
@@ -83,9 +82,8 @@ const fetchAnswers = async (questionId, start = 0) => {
 	}
 }
 
-const fetchAnswersByUid = async (uid, start = 0) => {
+const fetchAnswersByUid = async (uid, start = 0, limit = 5) => {
 	const answers = []
-	const limit = 5
 	const [newVisible, allLoaded] = await getDocStartAt('answers', {
 		start,
 		limit,

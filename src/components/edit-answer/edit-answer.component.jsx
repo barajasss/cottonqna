@@ -114,6 +114,7 @@ class EditAnswer extends React.Component {
 							className='form-control'
 							rows='5'
 							placeholder='Edit your answer related to academics or cotton university.'
+							minLength={10}
 							maxLength={2000}
 							name='answer'
 							onChange={this.handleChange}

@@ -2,6 +2,7 @@ import AnswerActionTypes from './answer.types'
 import { setLoading, unsetLoading } from '../loader/loader.actions'
 import { updateQuestion } from '../question/question.actions'
 import { fetchQuestion } from '../../firebase/methods/firebase.question.methods'
+import firebase from '../../firebase/firebase'
 
 import {
 	postAnswer,
@@ -112,11 +113,21 @@ const updateAnswerAsync = answer => async dispatch => {
 	dispatch(unsetLoading())
 }
 
-const deleteAnswerAsync = answerId => async dispatch => {
+const deleteAnswerAsync = answerId => async (dispatch, getState) => {
 	dispatch(setLoading())
 	try {
 		await deleteAnswerFirebase(answerId)
 		dispatch(removeAnswer(answerId))
+
+		if (!getState().answers.allLoaded) {
+			const { answers, allLoaded } = await fetchAnswersByUid(
+				firebase.auth().currentUser.uid,
+				getState().answers.answers.length,
+				1
+			)
+			dispatch(appendAnswers(answers))
+			dispatch(setAllLoaded(allLoaded))
+		}
 	} catch (err) {
 		console.log(err)
 	}

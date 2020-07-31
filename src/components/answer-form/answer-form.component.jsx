@@ -55,6 +55,7 @@ class AnswerForm extends React.Component {
 						rows={9}
 						name='answer'
 						className='form-control mt-3'
+						minLength={20}
 						maxLength={1000}
 						defaultValue={answer}
 						onChange={this.handleChange}

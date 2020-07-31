@@ -1,5 +1,6 @@
 import QuestionActionTypes from './question.types'
 import { setLoading, unsetLoading } from '../loader/loader.actions'
+import firebase from '../../firebase/firebase'
 
 import {
 	fetchQuestion,
@@ -61,11 +62,20 @@ const updateQuestionAsync = question => async (dispatch, getState) => {
 	dispatch(unsetLoading())
 }
 
-const deleteQuestionAsync = questionId => async dispatch => {
+const deleteQuestionAsync = questionId => async (dispatch, getState) => {
 	dispatch(setLoading())
 	try {
 		await deleteQuestionFirebase(questionId)
 		dispatch(removeQuestion(questionId))
+		if (!getState().questions.allLoaded) {
+			const { questions, allLoaded } = await fetchQuestionsByUid(
+				firebase.auth().currentUser.uid,
+				getState().questions.questions.length,
+				1
+			)
+			dispatch(appendQuestions(questions))
+			dispatch(setAllLoaded(allLoaded))
+		}
 	} catch (err) {
 		console.log(err)
 	}
