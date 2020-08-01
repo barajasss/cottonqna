@@ -71,7 +71,7 @@ class QuestionContainer extends React.Component {
 					<Question key={questionDoc.id} {...questionDoc} />
 				))}
 				{!questionsFetched && type !== 'search' && (
-					<h5>Loading Questions...</h5>
+					<h6>Loading Questions...</h6>
 				)}
 
 				{questionsFetched &&

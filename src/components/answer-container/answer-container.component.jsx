@@ -54,7 +54,9 @@ class AnswerContainer extends React.Component {
 				{answers.map(answerDoc => (
 					<Answer key={answerDoc.id} {...answerDoc} />
 				))}
-				{!answersFetched ? <h6>Loading answers...</h6> : null}
+				{!answersFetched ? (
+					<h6 className='mt-3'>Loading answers...</h6>
+				) : null}
 				{answersFetched && (
 					<LoadMore
 						fetchNext={() =>
