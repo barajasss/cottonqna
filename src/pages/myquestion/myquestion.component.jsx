@@ -59,12 +59,14 @@ class MyQuestionPage extends React.Component {
 
 				{!questionsFetched && <h5>Loading your questions...</h5>}
 				{questionsFetched && questions.length === 0 && (
-					<h5>No questions found</h5>
+					<h6>No questions found</h6>
 				)}
-				<LoadMore
-					fetchNext={() => fetchNextByUidAndUpdateQuestions(uid)}
-					allLoaded={allLoaded}
-				/>
+				{questionsFetched && (
+					<LoadMore
+						fetchNext={() => fetchNextByUidAndUpdateQuestions(uid)}
+						allLoaded={allLoaded}
+					/>
+				)}
 			</div>
 		)
 	}

@@ -2,6 +2,7 @@ import React from 'react'
 
 import './question.styles.scss'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
 
 import { connect } from 'react-redux'
 
@@ -87,6 +88,10 @@ class Question extends React.Component {
 		const { upvoted, displayShareIcon } = this.state
 		return (
 			<div className='question py-2'>
+				<Helmet>
+					<title>Cotton Q & A - Question</title>
+					<meta name='description' content={question} />
+				</Helmet>
 				<p className='pb-1 m-0'>
 					<img
 						src={photoURL}

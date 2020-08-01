@@ -56,14 +56,16 @@ class MyAnswerPage extends React.Component {
 					</div>
 				))}
 
-				{!answersFetched && <h5>Loading your answers...</h5>}
+				{!answersFetched && <h6>Loading your answers...</h6>}
 				{answersFetched && answers.length === 0 && (
-					<h5>No answers found</h5>
+					<h6>No answers found</h6>
 				)}
-				<LoadMore
-					fetchNext={() => fetchNextByUidAndUpdateAnswers(uid)}
-					allLoaded={allLoaded}
-				/>
+				{answersFetched && (
+					<LoadMore
+						fetchNext={() => fetchNextByUidAndUpdateAnswers(uid)}
+						allLoaded={allLoaded}
+					/>
+				)}
 			</div>
 		)
 	}

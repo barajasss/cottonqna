@@ -12,12 +12,21 @@ import LoadMore from '../load-more/load-more.component'
 import Answer from '../answer/answer.component'
 
 class AnswerContainer extends React.Component {
+	constructor() {
+		super()
+		this.state = {
+			answersFetched: false,
+		}
+	}
 	componentDidMount = async () => {
 		const {
 			fetchAndUpdateAnswers,
 			match: { params },
 		} = this.props
 		await fetchAndUpdateAnswers(params.questionId)
+		this.setState({
+			answersFetched: true,
+		})
 	}
 	renderAnswerHeading() {
 		const { answerCount } = this.props
@@ -36,6 +45,7 @@ class AnswerContainer extends React.Component {
 			fetchNextAndUpdateAnswers,
 			match: { params },
 		} = this.props
+		const { answersFetched } = this.state
 		return (
 			<div>
 				<div className='m-0 p-1 bg-light text-center border-bottom'>
@@ -44,12 +54,15 @@ class AnswerContainer extends React.Component {
 				{answers.map(answerDoc => (
 					<Answer key={answerDoc.id} {...answerDoc} />
 				))}
-				<LoadMore
-					fetchNext={() =>
-						fetchNextAndUpdateAnswers(params.questionId)
-					}
-					allLoaded={allLoaded}
-				/>
+				{!answersFetched ? <h6>Loading answers...</h6> : null}
+				{answersFetched && (
+					<LoadMore
+						fetchNext={() =>
+							fetchNextAndUpdateAnswers(params.questionId)
+						}
+						allLoaded={allLoaded}
+					/>
+				)}
 			</div>
 		)
 	}

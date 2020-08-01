@@ -1,15 +1,21 @@
 import React from 'react'
 
 import './about.styles.scss'
+import { Helmet } from 'react-helmet'
 
 class AboutPage extends React.Component {
 	render() {
 		return (
 			<div>
+				<Helmet>
+					<title>About Cotton Q & A</title>
+				</Helmet>
 				<p>
 					Cotton Q & A is a site created for good people like you,
 					where you can ask questions and find aswers from other
-					students related to Cotton University.
+					students related to Cotton University. It is under
+					continuous improvement and I am constantly working to add
+					new features to it.
 				</p>
 				<p>
 					It was designed to help students resolve their doubts and

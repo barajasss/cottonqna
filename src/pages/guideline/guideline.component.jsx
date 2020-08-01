@@ -1,21 +1,20 @@
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import './guideline.styles.scss'
 
 class GuidelinePage extends React.Component {
 	render() {
 		return (
 			<div>
+				<Helmet>
+					<title>Guidelines Cotton Q & A</title>
+				</Helmet>
 				<h3>Guidelines and Usage</h3>
 				<p>
 					These guidelines are meant to help everyone and avoid
 					troubles and problems.
 				</p>
 				<ol className='pl-4 guidelines'>
-					<li>
-						This is a Progressive Web App. Click "Add to homescreen"
-						from three dots at the top right to install it and get
-						app like experience.
-					</li>
 					<li>
 						Please don't use any disrespectful words in your
 						answer/questions.
@@ -39,6 +38,11 @@ class GuidelinePage extends React.Component {
 					<li>
 						Use the search feature to find the question you are
 						looking for.
+					</li>
+					<li>
+						This is a Progressive Web App. Click "Add to homescreen"
+						from three dots at the top right to install it and get
+						app like experience.
 					</li>
 					<li>
 						For any troubles or queries report to{' '}

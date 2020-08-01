@@ -78,7 +78,7 @@ class QuestionContainer extends React.Component {
 					questions.length === 0 &&
 					type !== 'search' && <h5>Questions not found</h5>}
 
-				{type !== 'search' && (
+				{questionsFetched && type !== 'search' && (
 					<LoadMore
 						fetchNext={fetchNextAndUpdateQuestions}
 						allLoaded={allLoaded}
